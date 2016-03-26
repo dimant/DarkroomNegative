@@ -30,11 +30,16 @@ public class MainController {
         _bitmapListener = bitmapListener;
     }
 
-    public void onImagePicked(Uri uri)
+    public void setImage(Bitmap bitmap)
+    {
+        _bitmap = bitmap;
+        _bitmapListener.onImageSet(_bitmap);
+    }
+
+    public void onImageSet(Uri uri)
     {
         try {
-            _bitmap = _bitmapLoader.Load(uri);
-            _bitmapListener.onBitmapChanged(_bitmap);
+            setImage(_bitmapLoader.Load(uri));
         } catch (FileNotFoundException e) {
             _toaster.Toast(R.string.error_image_open);
         }

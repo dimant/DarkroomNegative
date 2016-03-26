@@ -1,10 +1,8 @@
 package com.dtodorov.darkroomnegative.activities;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +14,19 @@ import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.IBitmapListener;
 import com.dtodorov.darkroomnegative.controllers.MainController;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
-import com.dtodorov.darkroomnegative.services.IBitmapLoader;
-import com.dtodorov.darkroomnegative.services.IToaster;
 import com.dtodorov.darkroomnegative.services.Toaster;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity implements IBitmapListener{
     private final int PICK_PHOTO_FOR_EXPOSURE = 1;
 
     private MainController _mainController;
+    private Bitmap _imageViewCache;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("image", _imageViewCache);
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
                 new BitmapLoader(context),
                 this
         );
+
+        if(savedInstanceState != null)
+        {
+            _imageViewCache = savedInstanceState.getParcelable("image");
+            _mainController.setImage(_imageViewCache);
+        }
     }
 
     public void pickImage(View view) {
@@ -58,13 +64,14 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
             }
 
             Uri uri = data.getData();
-            _mainController.onImagePicked(uri);
+            _mainController.onImageSet(uri);
         }
     }
 
     @Override
-    public void onBitmapChanged(Bitmap bitmap) {
+    public void onImageSet(Bitmap bitmap) {
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        _imageViewCache = bitmap;
         imageView.setImageBitmap(bitmap);
     }
 }

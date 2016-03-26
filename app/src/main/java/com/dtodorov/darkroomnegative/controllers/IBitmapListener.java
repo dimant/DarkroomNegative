@@ -6,5 +6,5 @@ import android.graphics.Bitmap;
  * Created by ditodoro on 3/25/2016.
  */
 public interface IBitmapListener {
-    void onBitmapChanged(Bitmap bitmap);
+    void onImageSet(Bitmap bitmap);
 }
