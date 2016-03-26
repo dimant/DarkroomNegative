@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Darkroom Negative</string>
+
+    <string name="title_activity_expose">Expose</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="welcome_message">Choose an image from your gallery to begin.</string>
+    <string name="error_image_open">Couldn\'t open image.</string>
 </resources>
