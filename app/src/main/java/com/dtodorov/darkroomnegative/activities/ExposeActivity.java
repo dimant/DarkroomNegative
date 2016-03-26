@@ -1,4 +1,4 @@
-package com.dtodorov.darkroomnegative;
+package com.dtodorov.darkroomnegative.activities;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;
@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+
+import com.dtodorov.darkroomnegative.R;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.

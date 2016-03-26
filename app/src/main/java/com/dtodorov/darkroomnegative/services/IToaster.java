@@ -1,4 +1,4 @@
-package com.dtodorov.darkroomnegative;
+package com.dtodorov.darkroomnegative.services;
 
 /**
  * Created by diman on 3/24/2016.

@@ -1,4 +1,4 @@
-package com.dtodorov.darkroomnegative;
+package com.dtodorov.darkroomnegative.services;
 
 import android.content.Context;
 import android.content.res.Resources;
