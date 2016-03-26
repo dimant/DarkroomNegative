@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Darkroom Negative</string>
-    <string name="action_settings">Settings</string>
-    <string name="info_welcome">Choose one of your photos to continue.</string>
-    <string name="content_image">Image to expose.</string>
-</resources>
