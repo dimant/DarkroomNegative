@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
             _imageViewCache = savedInstanceState.getParcelable("image");
             _mainController.setImage(_imageViewCache);
         }
-
-
     }
 
     private Thread _thread;
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
             }
 
             Uri uri = data.getData();
-            _mainController.onImageSet(uri);
+            _mainController.onImagePicked(uri);
         }
     }
 

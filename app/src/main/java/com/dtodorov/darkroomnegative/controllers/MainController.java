@@ -51,7 +51,7 @@ public class MainController implements IFilterCompletion, IClapListener {
         _bitmapListener.onImageSet(_bitmap);
     }
 
-    public void onImageSet(Uri uri)
+    public void onImagePicked(Uri uri)
     {
         try {
             Bitmap bitmap =_bitmapLoader.Load(uri);
