@@ -6,8 +6,9 @@ import android.net.Uri;
 import com.dtodorov.darkroomnegative.ImageProcessing.IAsyncFilterTask;
 import com.dtodorov.darkroomnegative.ImageProcessing.IFilterCompletion;
 import com.dtodorov.darkroomnegative.R;
+import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
+import com.dtodorov.darkroomnegative.helpers.IEventListener;
 import com.dtodorov.darkroomnegative.services.IBitmapLoader;
-import com.dtodorov.darkroomnegative.services.IBitmapWriter;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.IClapListener;
 import com.dtodorov.darkroomnegative.services.IToaster;
@@ -24,9 +25,13 @@ public class MainController implements IFilterCompletion, IClapListener {
     private IAsyncFilterTask _greyscaleFilterTask;
     private IBitmapListener _bitmapListener;
     private IClapDetector _clapDetector;
+    private IEventDispatcher _eventDispatcher;
     private Bitmap _bitmap;
 
+    private int _exposureTime;
+
     public MainController(
+            IEventDispatcher eventDispatcher,
             IToaster toaster,
             IBitmapLoader bitmapLoader,
             IAsyncFilterTask greyscaleFilterTask,
@@ -34,6 +39,7 @@ public class MainController implements IFilterCompletion, IClapListener {
             IClapDetector clapDetector
     )
     {
+        _eventDispatcher = eventDispatcher;
         _toaster = toaster;
         _bitmapLoader = bitmapLoader;
         _greyscaleFilterTask = greyscaleFilterTask;
@@ -49,6 +55,11 @@ public class MainController implements IFilterCompletion, IClapListener {
     {
         _bitmap = bitmap;
         _bitmapListener.onImageSet(_bitmap);
+    }
+
+    public void setExposureTime(int exposureTime) {
+        _exposureTime = exposureTime;
+        _eventDispatcher.emit("exposureTimeChanged", new Integer(exposureTime));
     }
 
     public void onImagePicked(Uri uri)

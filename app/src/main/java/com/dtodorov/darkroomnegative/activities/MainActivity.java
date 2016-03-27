@@ -3,12 +3,15 @@ package com.dtodorov.darkroomnegative.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.dtodorov.darkroomnegative.ImageProcessing.AsyncFilterTask;
 import com.dtodorov.darkroomnegative.ImageProcessing.RenderScriptContextFactory;
@@ -16,20 +19,22 @@ import com.dtodorov.darkroomnegative.ImageProcessing.filters.Grayscale;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.IBitmapListener;
 import com.dtodorov.darkroomnegative.controllers.MainController;
+import com.dtodorov.darkroomnegative.helpers.EventDispatcher;
+import com.dtodorov.darkroomnegative.helpers.IConverter;
+import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
+import com.dtodorov.darkroomnegative.helpers.IEventListener;
+import com.dtodorov.darkroomnegative.helpers.UnitDisplayConverter;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
 import com.dtodorov.darkroomnegative.services.ClapDetector;
 import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.Toaster;
 
-import be.tarsos.dsp.AudioDispatcher;
-import be.tarsos.dsp.io.android.AudioDispatcherFactory;
-import be.tarsos.dsp.onsets.OnsetHandler;
-import be.tarsos.dsp.onsets.PercussionOnsetDetector;
 
 public class MainActivity extends AppCompatActivity implements IBitmapListener{
     private final int PICK_PHOTO_FOR_EXPOSURE = 1;
 
     private MainController _mainController;
+    private IEventDispatcher _eventDispatcher;
     private FullScreen _fullScreen;
     private Bitmap _imageViewCache;
 
@@ -44,28 +49,63 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Context context = getApplicationContext();
+        final Context context = getApplicationContext();
+        final Resources resources = getResources();
 
-        RenderScriptContextFactory renderScriptContextFactory = new RenderScriptContextFactory(context);
+        final RenderScriptContextFactory renderScriptContextFactory = new RenderScriptContextFactory(context);
+        final View contentControl = findViewById(R.id.contentPanel);
+        final View[] controlsToHide = new View[] { findViewById(R.id.controlPanel)};
+        _fullScreen = new FullScreen(this, contentControl, controlsToHide);
+
+        final SeekBar exposureTimeControl = (SeekBar) findViewById(R.id.seekBar);
+        exposureTimeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                _mainController.setExposureTime(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        _eventDispatcher = new EventDispatcher();
+
+        _eventDispatcher.register("exposureTimeChanged", new IEventListener() {
+            private IConverter<Integer, String, String> _converter = new UnitDisplayConverter();
+            @Override
+            public void callback(Object param) {
+                Integer progress = (Integer) param;
+                String value = _converter.convert((Integer) progress, resources.getString(R.string.seconds));
+                TextView exposureTimeDisplay = (TextView) findViewById(R.id.exposureTimeDisplay);
+                exposureTimeDisplay.setText(value);
+            }
+        });
 
         _mainController = new MainController(
-                new Toaster(context, getResources()),
+                _eventDispatcher,
+                new Toaster(context, resources),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
                 this,
                 new ClapDetector()
         );
 
-        View contentControl = findViewById(R.id.contentPanel);
-        View[] controlsToHide = new View[] { findViewById(R.id.controlPanel)};
-
-        _fullScreen = new FullScreen(this, contentControl, controlsToHide);
-
         if(savedInstanceState != null)
         {
             _imageViewCache = savedInstanceState.getParcelable("image");
             _mainController.setImage(_imageViewCache);
         }
+
+        int defaultExposureTime = 5;
+        _mainController.setExposureTime(defaultExposureTime);
+        exposureTimeControl.setProgress(defaultExposureTime);
     }
 
     private Thread _thread;
