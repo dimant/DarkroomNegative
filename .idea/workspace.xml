@@ -8,16 +8,20 @@
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java" line="65" mnemonic="1" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="58d16cbd-8946-4b0d-b18b-5f9498c9fc1b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/EventDispatcher.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IConverter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IEventDispatcher.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IEventListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/UnitDisplayConverter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/Exposer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IExposer.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IFullScreen.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IFullScreenListener.java" />
+      <change type="DELETED" beforePath="D:\AndroidStudioProjects\DarkroomNegative\app\src\main\java\com\dtodorov\darkroomnegative\controllers\IBitmapListener.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Darkroom Negative.iws" />
@@ -46,94 +50,60 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.6735751">
-              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="class#2609:3045" expanded="false" />
-                <element signature="e#3470#3507#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.6666665">
-              <caret line="9" column="34" selection-start-line="9" selection-start-column="34" selection-end-line="9" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EventDispatcher.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/EventDispatcher.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#261#285#0" expanded="true" />
-                <element signature="e#479#480#0" expanded="true" />
-                <element signature="e#522#523#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Toaster.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/Toaster.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="54" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="54" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IEventListener.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IEventListener.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MainController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="59" column="51" selection-start-line="59" selection-start-column="51" selection-end-line="59" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.66902655">
+              <caret line="106" column="42" selection-start-line="106" selection-start-column="42" selection-end-line="106" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2537#2538#0" expanded="true" />
-                <element signature="e#2576#2577#0" expanded="true" />
+                <element signature="e#2699#2724#0" expanded="true" />
+                <element signature="e#2779#2780#0" expanded="true" />
+                <element signature="e#2844#2845#0" expanded="true" />
+                <element signature="e#2881#2882#0" expanded="true" />
+                <element signature="e#2946#2947#0" expanded="true" />
+                <element signature="e#3592#3593#0" expanded="true" />
+                <element signature="e#3624#3625#0" expanded="true" />
+                <element signature="e#3910#3911#0" expanded="true" />
+                <element signature="e#3951#3952#0" expanded="true" />
+                <element signature="e#4005#4006#0" expanded="true" />
+                <element signature="e#4046#4047#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IConverter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IConverter.java">
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.7777777">
-              <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="96" column="44" selection-start-line="96" selection-start-column="44" selection-end-line="96" selection-end-column="44" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="class#2377:2813" expanded="false" />
+                <element signature="e#3471#3508#0" expanded="true" />
+                <element signature="e#3734#4001#0" expanded="true" />
+                <element signature="e#4000#4001#0" expanded="true" />
+                <element signature="e#4051#4321#0" expanded="true" />
+                <element signature="e#4320#4321#0" expanded="true" />
+                <element signature="e#4371#4628#0" expanded="true" />
+                <element signature="e#4627#4628#0" expanded="true" />
+                <element signature="e#5650#5651#0" expanded="true" />
+                <element signature="e#5700#5701#0" expanded="true" />
+                <element signature="e#5746#5747#0" expanded="true" />
+                <element signature="e#5795#5796#0" expanded="true" />
+                <element signature="e#5843#5844#0" expanded="true" />
+                <element signature="e#5894#5895#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UnitDisplayConverter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/UnitDisplayConverter.java">
+      <file leaf-file-name="Exposer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/Exposer.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="42" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -145,7 +115,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
           <provider editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="66" column="53" selection-start-line="66" selection-start-column="53" selection-end-line="66" selection-end-column="53" />
+              <caret line="70" column="52" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -159,8 +129,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -1723,9 +1693,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/ImageProcessing/ConvolutionMatrix.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/ImageProcessing/GaussianBlur.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/ImageProcessing/Smooth.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/ImageProcessing/MeanRemoval.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/ImageProcessing/Sharpen.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/ImageProcessing/Emboss.java" />
@@ -1758,22 +1725,25 @@
         <option value="$PROJECT_DIR$/app/src/main/rs/Grayscale.rs" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IBitmapWriter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/BitmapWriter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IClapListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/ClapDetector.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IClapDetector.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/IEventListener.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/EventDispatcher.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IDataConverter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/EventDispatcher.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/SecondsDisplayConverter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/IConverter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/helpers/UnitDisplayConverter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IFullScreenListener.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IFullScreen.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/Exposer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
       </list>
     </option>
   </component>
@@ -1904,36 +1874,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Darkroom Negative" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DarkroomNegative" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2312,8 +2252,8 @@
       <recent name="D:\AndroidStudioProjects\DarkroomNegative\app\src\main\rs" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
-      <recent name="com.dtodorov.darkroomnegative.helpers" />
       <recent name="com.dtodorov.darkroomnegative.services" />
+      <recent name="com.dtodorov.darkroomnegative.helpers" />
       <recent name="com.dtodorov.darkroomnegative.ImageProcessing" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
@@ -2505,7 +2445,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38042268" sideWeight="0.20202559" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32480535" sideWeight="0.7979744" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3403782" sideWeight="0.7979744" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2515,6 +2455,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1945629" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2458287" sideWeight="0.49573562" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -2526,7 +2467,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2458287" sideWeight="0.49573562" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -2547,44 +2487,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="84" column="6" selection-start-line="84" selection-start-column="6" selection-end-line="84" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://D:/Android/sdk/sources/android-23/java/lang/Runnable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="0" selection-start-line="31" selection-start-column="16" selection-end-line="33" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="class#2609:3045" expanded="false" />
-            <element signature="e#3470#3507#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="43" selection-start-line="14" selection-start-column="43" selection-end-line="14" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2610,8 +2512,8 @@
           <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2460#2461#0" expanded="true" />
-            <element signature="e#2492#2493#0" expanded="true" />
+            <element signature="e#3592#3593#0" expanded="true" />
+            <element signature="e#3624#3625#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2674,8 +2576,20 @@
           <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="class#2609:3045" expanded="false" />
-            <element signature="e#3470#3507#0" expanded="true" />
+            <element signature="class#2377:2813" expanded="false" />
+            <element signature="e#3471#3508#0" expanded="true" />
+            <element signature="e#3734#4001#0" expanded="true" />
+            <element signature="e#4000#4001#0" expanded="true" />
+            <element signature="e#4051#4321#0" expanded="true" />
+            <element signature="e#4320#4321#0" expanded="true" />
+            <element signature="e#4371#4628#0" expanded="true" />
+            <element signature="e#4627#4628#0" expanded="true" />
+            <element signature="e#5650#5651#0" expanded="true" />
+            <element signature="e#5700#5701#0" expanded="true" />
+            <element signature="e#5746#5747#0" expanded="true" />
+            <element signature="e#5795#5796#0" expanded="true" />
+            <element signature="e#5843#5844#0" expanded="true" />
+            <element signature="e#5894#5895#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2694,8 +2608,20 @@
           <caret line="46" column="52" selection-start-line="46" selection-start-column="52" selection-end-line="46" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="class#2609:3045" expanded="false" />
-            <element signature="e#3470#3507#0" expanded="true" />
+            <element signature="class#2377:2813" expanded="false" />
+            <element signature="e#3471#3508#0" expanded="true" />
+            <element signature="e#3734#4001#0" expanded="true" />
+            <element signature="e#4000#4001#0" expanded="true" />
+            <element signature="e#4051#4321#0" expanded="true" />
+            <element signature="e#4320#4321#0" expanded="true" />
+            <element signature="e#4371#4628#0" expanded="true" />
+            <element signature="e#4627#4628#0" expanded="true" />
+            <element signature="e#5650#5651#0" expanded="true" />
+            <element signature="e#5700#5701#0" expanded="true" />
+            <element signature="e#5746#5747#0" expanded="true" />
+            <element signature="e#5795#5796#0" expanded="true" />
+            <element signature="e#5843#5844#0" expanded="true" />
+            <element signature="e#5894#5895#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2704,13 +2630,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.20695652">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/IBitmapListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -2845,16 +2764,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="84" column="6" selection-start-line="84" selection-start-column="6" selection-end-line="84" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DarkroomNegative.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2921,17 +2830,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="53" selection-start-line="66" selection-start-column="53" selection-end-line="66" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/attrs.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2987,26 +2885,106 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IFullScreenListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="51" selection-start-line="59" selection-start-column="51" selection-end-line="59" selection-end-column="51" />
+          <caret line="7" column="30" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/IFullScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="22" selection-start-line="6" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Android/sdk/sources/android-23/android/os/Handler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36307693">
+          <caret line="67" column="21" selection-start-line="67" selection-start-column="18" selection-end-line="67" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/FullScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2537#2538#0" expanded="true" />
-            <element signature="e#2576#2577#0" expanded="true" />
+            <element signature="e#1441#2304#0" expanded="true" />
+            <element signature="e#2303#2304#0" expanded="true" />
+            <element signature="e#2791#3653#0" expanded="true" />
+            <element signature="e#3652#3653#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/services/Exposer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/activities/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6735751">
-          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="96" column="44" selection-start-line="96" selection-start-column="44" selection-end-line="96" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="class#2609:3045" expanded="false" />
-            <element signature="e#3470#3507#0" expanded="true" />
+            <element signature="class#2377:2813" expanded="false" />
+            <element signature="e#3471#3508#0" expanded="true" />
+            <element signature="e#3734#4001#0" expanded="true" />
+            <element signature="e#4000#4001#0" expanded="true" />
+            <element signature="e#4051#4321#0" expanded="true" />
+            <element signature="e#4320#4321#0" expanded="true" />
+            <element signature="e#4371#4628#0" expanded="true" />
+            <element signature="e#4627#4628#0" expanded="true" />
+            <element signature="e#5650#5651#0" expanded="true" />
+            <element signature="e#5700#5701#0" expanded="true" />
+            <element signature="e#5746#5747#0" expanded="true" />
+            <element signature="e#5795#5796#0" expanded="true" />
+            <element signature="e#5843#5844#0" expanded="true" />
+            <element signature="e#5894#5895#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="70" column="52" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/dtodorov/darkroomnegative/controllers/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.66902655">
+          <caret line="106" column="42" selection-start-line="106" selection-start-column="42" selection-end-line="106" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2699#2724#0" expanded="true" />
+            <element signature="e#2779#2780#0" expanded="true" />
+            <element signature="e#2844#2845#0" expanded="true" />
+            <element signature="e#2881#2882#0" expanded="true" />
+            <element signature="e#2946#2947#0" expanded="true" />
+            <element signature="e#3592#3593#0" expanded="true" />
+            <element signature="e#3624#3625#0" expanded="true" />
+            <element signature="e#3910#3911#0" expanded="true" />
+            <element signature="e#3951#3952#0" expanded="true" />
+            <element signature="e#4005#4006#0" expanded="true" />
+            <element signature="e#4046#4047#0" expanded="true" />
           </folding>
         </state>
       </provider>

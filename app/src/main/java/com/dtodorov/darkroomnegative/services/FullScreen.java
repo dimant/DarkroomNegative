@@ -9,13 +9,15 @@ import android.os.Handler;
 /**
  * Created by diman on 3/26/2016.
  */
-public class FullScreen {
+public class FullScreen implements IFullScreen {
     private final Handler mHideHandler = new Handler();
     private static final int UI_ANIMATION_DELAY = 300;
 
     private AppCompatActivity _activity;
     private View _contentControl;
     private View[] _controlsToHide;
+
+    private IFullScreenListener _fullScreenListener;
 
     public  FullScreen(
             AppCompatActivity activity,
@@ -26,6 +28,12 @@ public class FullScreen {
         _controlsToHide = controlsoHide;
     }
 
+    @Override
+    public void setFullScreenListener(IFullScreenListener fullScreenListener) {
+        _fullScreenListener = fullScreenListener;
+    }
+
+    @Override
     public void enterFullScreen() {
         ActionBar actionBar = _activity.getSupportActionBar();
         if (actionBar != null) {
@@ -36,7 +44,7 @@ public class FullScreen {
             view.setVisibility(View.GONE);
         }
 
-        mHideHandler.removeCallbacks(_exitFullScreenPart2);
+        mHideHandler.removeCallbacksAndMessages(null);
         mHideHandler.postDelayed(_enterFullScreenPart2, UI_ANIMATION_DELAY);
     }
 
@@ -54,16 +62,21 @@ public class FullScreen {
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+            if(_fullScreenListener != null) {
+                _fullScreenListener.onEnteredFullScreen();
+            }
         }
     };
 
+    @Override
     public void exitFullScreen() {
         // Show the system bar
         _contentControl.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
 
         // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(_enterFullScreenPart2);
+        mHideHandler.removeCallbacksAndMessages(null);
         mHideHandler.postDelayed(_exitFullScreenPart2, UI_ANIMATION_DELAY);
     }
 
@@ -81,6 +94,10 @@ public class FullScreen {
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+            if(_fullScreenListener != null) {
+                _fullScreenListener.onExitedFullScreen();
+            }
         }
     };
 }

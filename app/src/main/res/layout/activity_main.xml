@@ -5,14 +5,16 @@
     android:layout_height="fill_parent"
     android:id="@+id/contentPanel"
     tools:context=".activities.MainActivity"
-    android:background="#000000">
+    android:background="#000000"
+    android:onClick="endExposeImage">
 
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_gravity="center"
-        android:layout_column="0"/>
+        android:layout_column="0"
+        android:onClick="endExposeImage" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +24,8 @@
         android:id="@+id/exposureTimeDisplay"
         android:layout_gravity="center"
         android:textColor="#dc1a1a"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:visibility="gone" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -35,13 +38,14 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
+            android:id="@+id/exposureTimeSeekBar"
             android:layout_marginBottom="50dp"
             android:thumbTint="#a0b5ff"
             android:splitTrack="false"
             android:progressBackgroundTint="#5a7efd"
             android:progressTint="#c9d5ff"
-            android:max="60" />
+            android:max="60"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -64,11 +68,11 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/exposeSettingsButton"
+                android:id="@+id/exposureSetupButton"
                 android:src="@android:drawable/ic_menu_recent_history"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:onClick="pickImage"
+                android:onClick="setupExposureTime"
                 android:nestedScrollingEnabled="false"
                 android:background="#00ffffff"
                 android:layout_gravity="center" />
@@ -91,7 +95,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_gravity="center"
                 android:background="#00ffffff"
-                android:onClick="exposeImage" />
+                android:onClick="beginExposeImage" />
 
         </LinearLayout>
     </FrameLayout>

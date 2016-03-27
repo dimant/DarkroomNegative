@@ -7,54 +7,68 @@ import com.dtodorov.darkroomnegative.ImageProcessing.IAsyncFilterTask;
 import com.dtodorov.darkroomnegative.ImageProcessing.IFilterCompletion;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
-import com.dtodorov.darkroomnegative.helpers.IEventListener;
 import com.dtodorov.darkroomnegative.services.IBitmapLoader;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.IClapListener;
+import com.dtodorov.darkroomnegative.services.IExposer;
+import com.dtodorov.darkroomnegative.services.IFullScreen;
+import com.dtodorov.darkroomnegative.services.IFullScreenListener;
 import com.dtodorov.darkroomnegative.services.IToaster;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Created by ditodoro on 3/25/2016.
  */
-public class MainController implements IFilterCompletion, IClapListener {
+public class MainController implements IFilterCompletion, IClapListener, IFullScreenListener {
+    private enum State {
+        HomeScreen,
+        ExposureSetup,
+        FullScreen
+    };
+
     private IToaster _toaster;
+    private IFullScreen _fullScreen;
+    private IExposer _exposer;
     private IBitmapLoader _bitmapLoader;
     private IAsyncFilterTask _greyscaleFilterTask;
-    private IBitmapListener _bitmapListener;
     private IClapDetector _clapDetector;
     private IEventDispatcher _eventDispatcher;
     private Bitmap _bitmap;
 
     private int _exposureTime;
+    private State _state;
 
     public MainController(
             IEventDispatcher eventDispatcher,
             IToaster toaster,
+            IFullScreen fullScreen,
+            IExposer exposer,
             IBitmapLoader bitmapLoader,
             IAsyncFilterTask greyscaleFilterTask,
-            IBitmapListener bitmapListener,
             IClapDetector clapDetector
     )
     {
         _eventDispatcher = eventDispatcher;
         _toaster = toaster;
+        _fullScreen = fullScreen;
+        _exposer = exposer;
         _bitmapLoader = bitmapLoader;
         _greyscaleFilterTask = greyscaleFilterTask;
-        _greyscaleFilterTask.setCompletion(this);
-        _bitmapListener = bitmapListener;
         _clapDetector = clapDetector;
+
+        _greyscaleFilterTask.setCompletion(this);
 
         _clapDetector.setClapListener(this);
         _clapDetector.start();
+
+        _state = State.HomeScreen;
     }
 
     public void setImage(Bitmap bitmap)
     {
         _bitmap = bitmap;
-        _bitmapListener.onImageSet(_bitmap);
+        _eventDispatcher.emit("imageSet", _bitmap);
     }
 
     public void setExposureTime(int exposureTime) {
@@ -72,6 +86,29 @@ public class MainController implements IFilterCompletion, IClapListener {
         }
     }
 
+    public void enterExposeImage() {
+        _eventDispatcher.emit("hideView", R.id.imageView);
+    }
+
+    public void exitExposeImage() {
+        _eventDispatcher.emit("showView", R.id.imageView);
+    }
+
+    public void setupExposureTime() {
+        switch(_state) {
+            case HomeScreen:
+                _eventDispatcher.emit("showView", R.id.exposureTimeSeekBar);
+                _eventDispatcher.emit("showView", R.id.exposureTimeDisplay);
+                _state = State.ExposureSetup;
+                break;
+            case ExposureSetup:
+                _eventDispatcher.emit("hideView", R.id.exposureTimeSeekBar);
+                _eventDispatcher.emit("hideView", R.id.exposureTimeDisplay);
+                _state = State.HomeScreen;
+                break;
+        }
+   }
+
     @Override
     public void filterFinished(Bitmap bitmap) {
         setImage(bitmap);
@@ -79,6 +116,22 @@ public class MainController implements IFilterCompletion, IClapListener {
 
     @Override
     public void onClapped() {
-        _toaster.Toast("Clap!");
+        switch(_state) {
+            case HomeScreen:
+                _toaster.Toast("Clap!");
+                break;
+            case FullScreen:
+                break;
+        }
+    }
+
+    @Override
+    public void onEnteredFullScreen() {
+        _state = State.FullScreen;
+    }
+
+    @Override
+    public void onExitedFullScreen() {
+        _state = State.HomeScreen;
     }
 }
