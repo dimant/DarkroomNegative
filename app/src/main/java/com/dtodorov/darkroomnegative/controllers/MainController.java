@@ -57,8 +57,8 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
         _greyscaleFilterTask = greyscaleFilterTask;
         _clapDetector = clapDetector;
 
+        _fullScreen.setFullScreenListener(this);
         _greyscaleFilterTask.setCompletion(this);
-
         _clapDetector.setClapListener(this);
         _clapDetector.start();
 
@@ -87,11 +87,21 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
     }
 
     public void enterExposeImage() {
-        _eventDispatcher.emit("hideView", R.id.imageView);
+        if(_state == State.HomeScreen) {
+            _eventDispatcher.emit("hideView", R.id.imageView);
+            _eventDispatcher.emit("hideView", R.id.exposureTimeDisplay);
+            _eventDispatcher.emit("hideView", R.id.controlPanel);
+            _fullScreen.enterFullScreen();
+        }
     }
 
     public void exitExposeImage() {
-        _eventDispatcher.emit("showView", R.id.imageView);
+        if(_state == State.FullScreen) {
+            _exposer.cancel();
+            _fullScreen.exitFullScreen();
+            _eventDispatcher.emit("showView", R.id.imageView);
+            _eventDispatcher.emit("showView", R.id.controlPanel);
+        }
     }
 
     public void setupExposureTime() {
@@ -112,6 +122,7 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
     @Override
     public void filterFinished(Bitmap bitmap) {
         setImage(bitmap);
+        _eventDispatcher.emit("enableView", R.id.beginExposureButton);
     }
 
     @Override
@@ -121,6 +132,7 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
                 _toaster.Toast("Clap!");
                 break;
             case FullScreen:
+                _exposer.expose(_exposureTime);
                 break;
         }
     }

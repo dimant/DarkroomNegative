@@ -1,6 +1,7 @@
 package com.dtodorov.darkroomnegative.services;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 /**
@@ -12,6 +13,7 @@ public class Exposer implements IExposer {
 
     public Exposer(View view) {
         _view = view;
+        _handler = new Handler(Looper.getMainLooper());
     }
 
     @Override

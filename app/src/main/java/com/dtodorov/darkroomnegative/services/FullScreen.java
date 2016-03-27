@@ -15,17 +15,14 @@ public class FullScreen implements IFullScreen {
 
     private AppCompatActivity _activity;
     private View _contentControl;
-    private View[] _controlsToHide;
 
     private IFullScreenListener _fullScreenListener;
 
     public  FullScreen(
             AppCompatActivity activity,
-            View contentControl,
-            View[] controlsoHide) {
+            View contentControl) {
         _activity = activity;
         _contentControl = contentControl;
-        _controlsToHide = controlsoHide;
     }
 
     @Override
@@ -38,10 +35,6 @@ public class FullScreen implements IFullScreen {
         ActionBar actionBar = _activity.getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
-        }
-
-        for(View view : _controlsToHide) {
-            view.setVisibility(View.GONE);
         }
 
         mHideHandler.removeCallbacksAndMessages(null);
@@ -71,6 +64,11 @@ public class FullScreen implements IFullScreen {
 
     @Override
     public void exitFullScreen() {
+        ActionBar actionBar = _activity.getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+        }
+
         // Show the system bar
         _contentControl.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);

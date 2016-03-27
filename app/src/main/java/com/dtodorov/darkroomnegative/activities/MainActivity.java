@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         final View contentControl = findViewById(R.id.contentPanel);
-        final View[] controlsToHide = new View[] { findViewById(R.id.controlPanel)};
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
 
         _eventDispatcher = new EventDispatcher();
@@ -107,6 +106,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        _eventDispatcher.register("enableView", new IEventListener() {
+            @Override
+            public void callback(Object param) {
+                Integer id = (Integer) param;
+                View view = findViewById(id.intValue());
+                view.setEnabled(true);
+            }
+        });
+
+        _eventDispatcher.register("disableView", new IEventListener() {
+            @Override
+            public void callback(Object param) {
+                Integer id = (Integer) param;
+                View view = findViewById(id.intValue());
+                view.setEnabled(false);
+            }
+        });
+
         _eventDispatcher.register("imageSet", new IEventListener() {
             @Override
             public void callback(Object param) {
@@ -119,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         _mainController = new MainController(
                 _eventDispatcher,
                 new Toaster(context, resources),
-                new FullScreen(this, contentControl, controlsToHide),
+                new FullScreen(this, contentControl),
                 new Exposer(imageView),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
@@ -135,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         int defaultExposureTime = 5;
         _mainController.setExposureTime(defaultExposureTime);
         exposureTimeControl.setProgress(defaultExposureTime);
+        _eventDispatcher.emit("disableView", R.id.beginExposureButton);
     }
 
     public void pickImage(View view) {
