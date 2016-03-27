@@ -17,8 +17,14 @@ import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.IBitmapListener;
 import com.dtodorov.darkroomnegative.controllers.MainController;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
+import com.dtodorov.darkroomnegative.services.ClapDetector;
 import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.Toaster;
+
+import be.tarsos.dsp.AudioDispatcher;
+import be.tarsos.dsp.io.android.AudioDispatcherFactory;
+import be.tarsos.dsp.onsets.OnsetHandler;
+import be.tarsos.dsp.onsets.PercussionOnsetDetector;
 
 public class MainActivity extends AppCompatActivity implements IBitmapListener{
     private final int PICK_PHOTO_FOR_EXPOSURE = 1;
@@ -46,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
                 new Toaster(context, getResources()),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
-                this
+                this,
+                new ClapDetector()
         );
 
         View contentControl = findViewById(R.id.contentPanel);
@@ -59,7 +66,11 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
             _imageViewCache = savedInstanceState.getParcelable("image");
             _mainController.setImage(_imageViewCache);
         }
+
+
     }
+
+    private Thread _thread;
 
     public void pickImage(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
