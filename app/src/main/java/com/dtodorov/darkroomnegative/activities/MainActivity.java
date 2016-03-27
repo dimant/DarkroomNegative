@@ -11,7 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.dtodorov.darkroomnegative.ImageProcessing.AsyncFilterTask;
-import com.dtodorov.darkroomnegative.ImageProcessing.Greyscale;
+import com.dtodorov.darkroomnegative.ImageProcessing.RenderScriptContextFactory;
+import com.dtodorov.darkroomnegative.ImageProcessing.filters.Grayscale;
 import com.dtodorov.darkroomnegative.ImageProcessing.IFilter;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.IBitmapListener;
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
 
     private MainController _mainController;
     private Bitmap _imageViewCache;
-    private IFilter _greyscaleFilter;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -39,10 +39,12 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
 
         Context context = getApplicationContext();
 
+        RenderScriptContextFactory renderScriptContextFactory = new RenderScriptContextFactory(context);
+
         _mainController = new MainController(
                 new Toaster(context, getResources()),
                 new BitmapLoader(context),
-                new AsyncFilterTask(new Greyscale()),
+                new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
                 this
         );
 
