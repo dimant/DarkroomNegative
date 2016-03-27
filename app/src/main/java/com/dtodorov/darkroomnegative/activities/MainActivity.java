@@ -13,12 +13,10 @@ import android.widget.ImageView;
 import com.dtodorov.darkroomnegative.ImageProcessing.AsyncFilterTask;
 import com.dtodorov.darkroomnegative.ImageProcessing.RenderScriptContextFactory;
 import com.dtodorov.darkroomnegative.ImageProcessing.filters.Grayscale;
-import com.dtodorov.darkroomnegative.ImageProcessing.IFilter;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.IBitmapListener;
 import com.dtodorov.darkroomnegative.controllers.MainController;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
-import com.dtodorov.darkroomnegative.services.BitmapWriter;
 import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.Toaster;
 
