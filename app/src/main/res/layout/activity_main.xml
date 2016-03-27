@@ -14,6 +14,16 @@
         android:layout_gravity="center"
         android:layout_column="0"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="88 seconds"
+        android:id="@+id/exposureTimeDisplay"
+        android:layout_gravity="center"
+        android:textColor="#dc1a1a"
+        android:textSize="50sp" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,6 +31,17 @@
         android:fitsSystemWindows="true"
         android:layout_gravity="bottom"
         android:background="#90000000">
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_marginBottom="50dp"
+            android:thumbTint="#a0b5ff"
+            android:splitTrack="false"
+            android:progressBackgroundTint="#5a7efd"
+            android:progressTint="#c9d5ff"
+            android:max="60" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,6 +54,18 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/pickImageButton"
                 android:src="@android:drawable/ic_menu_gallery"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:onClick="pickImage"
+                android:nestedScrollingEnabled="false"
+                android:background="#00ffffff"
+                android:layout_gravity="center" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/exposeSettingsButton"
+                android:src="@android:drawable/ic_menu_recent_history"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:onClick="pickImage"
