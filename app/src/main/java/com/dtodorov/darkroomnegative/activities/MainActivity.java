@@ -18,12 +18,15 @@ import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.IBitmapListener;
 import com.dtodorov.darkroomnegative.controllers.MainController;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
+import com.dtodorov.darkroomnegative.services.BitmapWriter;
+import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.Toaster;
 
 public class MainActivity extends AppCompatActivity implements IBitmapListener{
     private final int PICK_PHOTO_FOR_EXPOSURE = 1;
 
     private MainController _mainController;
+    private FullScreen _fullScreen;
     private Bitmap _imageViewCache;
 
     @Override
@@ -48,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
                 this
         );
 
+        View contentControl = findViewById(R.id.contentPanel);
+        View[] controlsToHide = new View[] { findViewById(R.id.controlPanel)};
+
+        _fullScreen = new FullScreen(this, contentControl, controlsToHide);
+
         if(savedInstanceState != null)
         {
             _imageViewCache = savedInstanceState.getParcelable("image");
@@ -59,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements IBitmapListener{
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_PHOTO_FOR_EXPOSURE);
+    }
+
+    public void exposeImage(View view) {
+        _fullScreen.enterFullScreen();
     }
 
     @Override
