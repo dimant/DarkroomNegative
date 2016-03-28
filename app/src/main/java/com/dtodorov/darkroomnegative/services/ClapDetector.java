@@ -15,6 +15,7 @@ import be.tarsos.dsp.onsets.PercussionOnsetDetector;
  */
 public class ClapDetector implements IClapDetector {
     private Thread _thread;
+    private AudioDispatcher _dispatcher;
     private IClapListener _clapListener;
     private Handler _handler;
 
@@ -26,29 +27,40 @@ public class ClapDetector implements IClapDetector {
         }
     };
 
-    public ClapDetector() {
-        _handler = new Handler(Looper.getMainLooper());
-
-        AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(22050, 1024, 0);
-        double threshold = 8;
-        double sensitivity = 20;
-        PercussionOnsetDetector mPercussionDetector = new PercussionOnsetDetector(22050, 1024,
-                new OnsetHandler() {
-
-                    @Override
-                    public void handleOnset(double time, double salience) {
-                        if(_clapListener != null) {
-                            _handler.post(_callback);
-                        }
-                    }
-                }, sensitivity, threshold);
-        dispatcher.addAudioProcessor(mPercussionDetector);
-        _thread = new Thread(dispatcher);
-    }
+    private boolean isRunning = false;
 
     @Override
     public void start() {
-        _thread.start();
+        if(isRunning == false) {
+            _handler = new Handler(Looper.getMainLooper());
+
+            _dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(22050, 1024, 0);
+            double threshold = 8;
+            double sensitivity = 20;
+            PercussionOnsetDetector mPercussionDetector = new PercussionOnsetDetector(22050, 1024,
+                    new OnsetHandler() {
+
+                        @Override
+                        public void handleOnset(double time, double salience) {
+                            if(_clapListener != null) {
+                                _handler.post(_callback);
+                            }
+                        }
+                    }, sensitivity, threshold);
+            _dispatcher.addAudioProcessor(mPercussionDetector);
+            _thread = new Thread(_dispatcher);
+            _thread.start();
+            isRunning = true;
+        }
+    }
+
+    @Override
+    public void stop() {
+        if(isRunning) {
+            _dispatcher.stop();
+            _thread.interrupt();
+            isRunning = false;
+        }
     }
 
     @Override

@@ -6,4 +6,5 @@ package com.dtodorov.darkroomnegative.services;
 public interface IClapDetector {
     void setClapListener(IClapListener clapListener);
     void start();
+    void stop();
 }

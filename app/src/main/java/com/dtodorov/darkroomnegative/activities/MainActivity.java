@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MainController _mainController;
     private IEventDispatcher _eventDispatcher;
+    private IClapDetector _clapDetector;
     private Bitmap _imageViewCache;
 
     @Override
@@ -47,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
         outState.putInt("exposureTime", exposureTimeControl.getProgress());
 
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        _clapDetector.stop();
+        super.onDestroy();
     }
 
     @Override
@@ -138,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        _clapDetector = new ClapDetector();
+
         _mainController = new MainController(
                 _eventDispatcher,
                 new Toaster(context, resources),
@@ -145,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                 new Exposer(imageView),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
-                new ClapDetector()
+                _clapDetector
         );
 
         int exposureTime = 5;
@@ -157,13 +167,15 @@ public class MainActivity extends AppCompatActivity {
             _eventDispatcher.emit("enableView", R.id.beginExposureButton);
 
             exposureTime = savedInstanceState.getInt("exposureTime");
-
         } else {
             _eventDispatcher.emit("disableView", R.id.beginExposureButton);
+
         }
 
         _mainController.setExposureTime(exposureTime);
         exposureTimeControl.setProgress(exposureTime);
+        _clapDetector.setClapListener(_mainController);
+        _clapDetector.start();
     }
 
     public void pickImage(View view) {

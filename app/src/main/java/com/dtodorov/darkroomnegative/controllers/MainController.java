@@ -103,16 +103,14 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
                 .onExit(new Action() {
                     @Override
                     public void doIt() {
-                        _fullScreen.exitFullScreen();
                         _exposer.cancel();
+                        _fullScreen.exitFullScreen();
                     }
                 })
                 .permit(Trigger.Home, State.HomeScreen);
 
         _greyscaleFilterTask.setCompletion(this);
         _fullScreen.setFullScreenListener(this);
-        _clapDetector.setClapListener(this);
-        _clapDetector.start();
     }
 
     public void fire(Trigger trigger) {
