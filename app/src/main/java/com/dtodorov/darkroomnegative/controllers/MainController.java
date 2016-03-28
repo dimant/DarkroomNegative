@@ -14,18 +14,28 @@ import com.dtodorov.darkroomnegative.services.IExposer;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
 import com.dtodorov.darkroomnegative.services.IFullScreenListener;
 import com.dtodorov.darkroomnegative.services.IToaster;
+import com.github.oxo42.stateless4j.StateMachine;
+import com.github.oxo42.stateless4j.delegates.Action;
 
 import java.io.FileNotFoundException;
 
 /**
  * Created by ditodoro on 3/25/2016.
  */
-public class MainController implements IFilterCompletion, IClapListener, IFullScreenListener {
+public class MainController implements IFilterCompletion, IClapListener {
     private enum State {
         HomeScreen,
         ExposureSetup,
         FullScreen
     };
+
+    public enum Trigger {
+        Home,
+        SetupExposure,
+        Expose
+    };
+
+    private StateMachine<State, Trigger> _stateMachine;
 
     private IToaster _toaster;
     private IFullScreen _fullScreen;
@@ -57,12 +67,60 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
         _greyscaleFilterTask = greyscaleFilterTask;
         _clapDetector = clapDetector;
 
-        _fullScreen.setFullScreenListener(this);
         _greyscaleFilterTask.setCompletion(this);
         _clapDetector.setClapListener(this);
-        _clapDetector.start();
 
-        _state = State.HomeScreen;
+        _stateMachine = new StateMachine<State, Trigger>(State.HomeScreen);
+
+        _stateMachine.configure(State.HomeScreen)
+                .permit(Trigger.SetupExposure, State.ExposureSetup)
+                .permit(Trigger.Expose, State.FullScreen);
+
+        _stateMachine.configure(State.ExposureSetup)
+                .onEntry(new Action() {
+                    @Override
+                    public void doIt() {
+                        _eventDispatcher.emit("showView", R.id.exposureTimeSeekBar);
+                        _eventDispatcher.emit("showView", R.id.exposureTimeDisplay);
+                    }
+                })
+                .onExit(new Action() {
+                    @Override
+                    public void doIt() {
+                        _eventDispatcher.emit("hideView", R.id.exposureTimeSeekBar);
+                        _eventDispatcher.emit("hideView", R.id.exposureTimeDisplay);
+                    }
+                })
+                .permit(Trigger.Expose, State.FullScreen)
+                .permit(Trigger.SetupExposure, State.HomeScreen);
+
+        _stateMachine.configure(State.FullScreen)
+                .onEntry(new Action() {
+                    @Override
+                    public void doIt() {
+                        _eventDispatcher.emit("hideView", R.id.imageView);
+                        _eventDispatcher.emit("hideView", R.id.controlPanel);
+                        _fullScreen.enterFullScreen();
+                        _clapDetector.start();
+                    }
+                })
+                .onExit(new Action() {
+                    @Override
+                    public void doIt() {
+                        _exposer.cancel();
+                        _clapDetector.stop();
+                        _fullScreen.exitFullScreen();
+                        _eventDispatcher.emit("showView", R.id.imageView);
+                        _eventDispatcher.emit("showView", R.id.controlPanel);
+                    }
+                })
+                .permit(Trigger.Home, State.HomeScreen);
+    }
+
+    public void fire(Trigger trigger) {
+        if(_stateMachine.canFire(trigger)) {
+            _stateMachine.fire(trigger);
+        }
     }
 
     public void setImage(Bitmap bitmap)
@@ -86,39 +144,6 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
         }
     }
 
-    public void enterExposeImage() {
-        if(_state == State.HomeScreen) {
-            _eventDispatcher.emit("hideView", R.id.imageView);
-            _eventDispatcher.emit("hideView", R.id.exposureTimeDisplay);
-            _eventDispatcher.emit("hideView", R.id.controlPanel);
-            _fullScreen.enterFullScreen();
-        }
-    }
-
-    public void exitExposeImage() {
-        if(_state == State.FullScreen) {
-            _exposer.cancel();
-            _fullScreen.exitFullScreen();
-            _eventDispatcher.emit("showView", R.id.imageView);
-            _eventDispatcher.emit("showView", R.id.controlPanel);
-        }
-    }
-
-    public void setupExposureTime() {
-        switch(_state) {
-            case HomeScreen:
-                _eventDispatcher.emit("showView", R.id.exposureTimeSeekBar);
-                _eventDispatcher.emit("showView", R.id.exposureTimeDisplay);
-                _state = State.ExposureSetup;
-                break;
-            case ExposureSetup:
-                _eventDispatcher.emit("hideView", R.id.exposureTimeSeekBar);
-                _eventDispatcher.emit("hideView", R.id.exposureTimeDisplay);
-                _state = State.HomeScreen;
-                break;
-        }
-   }
-
     @Override
     public void filterFinished(Bitmap bitmap) {
         setImage(bitmap);
@@ -127,23 +152,6 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
 
     @Override
     public void onClapped() {
-        switch(_state) {
-            case HomeScreen:
-                _toaster.Toast("Clap!");
-                break;
-            case FullScreen:
-                _exposer.expose(_exposureTime);
-                break;
-        }
-    }
-
-    @Override
-    public void onEnteredFullScreen() {
-        _state = State.FullScreen;
-    }
-
-    @Override
-    public void onExitedFullScreen() {
-        _state = State.HomeScreen;
+        _exposer.expose(_exposureTime);
     }
 }

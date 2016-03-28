@@ -41,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable("image", _imageViewCache);
+
+        final SeekBar exposureTimeControl = (SeekBar) findViewById(R.id.exposureTimeSeekBar);
+        outState.putInt("exposureTime", exposureTimeControl.getProgress());
+
         super.onSaveInstanceState(outState);
     }
 
@@ -143,16 +147,22 @@ public class MainActivity extends AppCompatActivity {
                 new ClapDetector()
         );
 
-        if(savedInstanceState != null)
-        {
+        int exposureTime = 5;
+
+        if(savedInstanceState != null) {
             _imageViewCache = savedInstanceState.getParcelable("image");
             _mainController.setImage(_imageViewCache);
+            _mainController.fire(MainController.Trigger.Home);
+            _eventDispatcher.emit("enableView", R.id.beginExposureButton);
+
+            exposureTime = savedInstanceState.getInt("exposureTime");
+
+        } else {
+            _eventDispatcher.emit("disableView", R.id.beginExposureButton);
         }
 
-        int defaultExposureTime = 5;
-        _mainController.setExposureTime(defaultExposureTime);
-        exposureTimeControl.setProgress(defaultExposureTime);
-        _eventDispatcher.emit("disableView", R.id.beginExposureButton);
+        _mainController.setExposureTime(exposureTime);
+        exposureTimeControl.setProgress(exposureTime);
     }
 
     public void pickImage(View view) {
@@ -162,15 +172,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void enterExposeImage(View view) {
-        _mainController.enterExposeImage();
+        _mainController.fire(MainController.Trigger.Expose);
     }
 
     public void exitExposeImage(View view) {
-        _mainController.exitExposeImage();
+        _mainController.fire(MainController.Trigger.Home);
     }
 
     public void setupExposureTime(View view) {
-        _mainController.setupExposureTime();
+        _mainController.fire(MainController.Trigger.SetupExposure);
     }
 
     @Override

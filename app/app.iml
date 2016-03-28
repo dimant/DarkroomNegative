@@ -91,6 +91,7 @@
     <orderEntry type="library" exported="" name="support-annotations-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="stateless4j-2.5.2-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.2.1" level="project" />
   </component>
 </module>
