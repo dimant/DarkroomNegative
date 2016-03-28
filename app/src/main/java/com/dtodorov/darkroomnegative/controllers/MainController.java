@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 /**
  * Created by ditodoro on 3/25/2016.
  */
-public class MainController implements IFilterCompletion, IClapListener {
+public class MainController implements IFilterCompletion, IClapListener, IFullScreenListener {
     private enum State {
         HomeScreen,
         ExposureSetup,
@@ -67,9 +67,6 @@ public class MainController implements IFilterCompletion, IClapListener {
         _greyscaleFilterTask = greyscaleFilterTask;
         _clapDetector = clapDetector;
 
-        _greyscaleFilterTask.setCompletion(this);
-        _clapDetector.setClapListener(this);
-
         _stateMachine = new StateMachine<State, Trigger>(State.HomeScreen);
 
         _stateMachine.configure(State.HomeScreen)
@@ -101,20 +98,21 @@ public class MainController implements IFilterCompletion, IClapListener {
                         _eventDispatcher.emit("hideView", R.id.imageView);
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
                         _fullScreen.enterFullScreen();
-                        _clapDetector.start();
                     }
                 })
                 .onExit(new Action() {
                     @Override
                     public void doIt() {
-                        _exposer.cancel();
-                        _clapDetector.stop();
                         _fullScreen.exitFullScreen();
-                        _eventDispatcher.emit("showView", R.id.imageView);
-                        _eventDispatcher.emit("showView", R.id.controlPanel);
+                        _exposer.cancel();
                     }
                 })
                 .permit(Trigger.Home, State.HomeScreen);
+
+        _greyscaleFilterTask.setCompletion(this);
+        _fullScreen.setFullScreenListener(this);
+        _clapDetector.setClapListener(this);
+        _clapDetector.start();
     }
 
     public void fire(Trigger trigger) {
@@ -152,6 +150,20 @@ public class MainController implements IFilterCompletion, IClapListener {
 
     @Override
     public void onClapped() {
-        _exposer.expose(_exposureTime);
+        if(_stateMachine.getState() == State.FullScreen) {
+            _exposer.expose(_exposureTime);
+        }
     }
+
+    @Override
+    public void onEnteredFullScreen() {
+
+    }
+
+    @Override
+    public void onExitedFullScreen() {
+        _eventDispatcher.emit("showView", R.id.imageView);
+        _eventDispatcher.emit("showView", R.id.controlPanel);
+    }
+
 }

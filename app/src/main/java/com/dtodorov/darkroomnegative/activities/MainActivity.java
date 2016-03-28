@@ -27,6 +27,7 @@ import com.dtodorov.darkroomnegative.services.BitmapLoader;
 import com.dtodorov.darkroomnegative.services.ClapDetector;
 import com.dtodorov.darkroomnegative.services.Exposer;
 import com.dtodorov.darkroomnegative.services.FullScreen;
+import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
 import com.dtodorov.darkroomnegative.services.Toaster;
 
