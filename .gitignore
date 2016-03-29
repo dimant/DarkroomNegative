@@ -2,3 +2,4 @@
 /build
 /captures
 .gradle/
+.idea/workspace.xml

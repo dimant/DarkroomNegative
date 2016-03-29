@@ -6,6 +6,7 @@
     android:id="@+id/contentPanel"
     tools:context=".activities.MainActivity"
     android:background="#000000"
+    android:keepScreenOn="true"
     android:onClick="exitExposeImage">
 
     <ImageView
