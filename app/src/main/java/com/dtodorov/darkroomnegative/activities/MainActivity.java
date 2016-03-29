@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -161,15 +162,12 @@ public class MainActivity extends AppCompatActivity {
             _mainFragment = new MainFragment();
             fm.beginTransaction().add(_mainFragment, "mainFragment").commit();
 
-            _clapDetector = new ClapDetector();
-            _clapDetector.start();
             _eventDispatcher.emit("disableView", R.id.beginExposureButton);
             _mainController.setExposureTime(5);
         } else {
             Bitmap positiveImage = _mainFragment.getObject(MainFragment.POSITIVE_IMAGE);
             Bitmap negativeImage = _mainFragment.getObject(MainFragment.NEGATIVE_IMAGE);
             Integer exposureTime = _mainFragment.getObject(MainFragment.EXPOSURE_TIME);
-            _clapDetector = _mainFragment.getObject(MainFragment.CLAP_DETECTOR);
 
             _mainController.restoreImages(positiveImage, negativeImage);
             _mainController.setExposureTime(exposureTime);
@@ -178,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         exposureTimeControl.setProgress(_mainController.getExposureTime());
+
+        _clapDetector = new ClapDetector();
+        _clapDetector.start();
         _clapDetector.setClapListener(_mainController);
     }
 
@@ -186,10 +187,10 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onDestroy();
         _clapDetector.setClapListener(null);
+        _clapDetector.stop();
         _mainFragment.putObject(MainFragment.POSITIVE_IMAGE, _mainController.getPositiveBitmap());
         _mainFragment.putObject(MainFragment.NEGATIVE_IMAGE, _mainController.getNegativeBitmap());
         _mainFragment.putObject(MainFragment.EXPOSURE_TIME, _mainController.getExposureTime());
-        _mainFragment.putObject(MainFragment.CLAP_DETECTOR, _clapDetector);
     }
 
     @Override

@@ -13,7 +13,6 @@ public class MainFragment extends Fragment {
     public static final String NEGATIVE_IMAGE = "negativeImage";
     public static final String POSITIVE_IMAGE = "positiveImage";
     public static final String EXPOSURE_TIME = "exposureTime";
-    public static final String CLAP_DETECTOR = "clapDetector";
 
     private Map<String, Object> _retainedData;
 
@@ -27,6 +26,7 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
     }
+
 
     public void putObject(String key, Object value) {
         _retainedData.put(key, value);
