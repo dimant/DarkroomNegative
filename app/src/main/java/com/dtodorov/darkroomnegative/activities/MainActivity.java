@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 _eventDispatcher,
                 new Toaster(context, resources),
                 new FullScreen(this, contentControl),
-                new Exposer(imageView),
+                new Exposer(imageView, getContentResolver()),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
                 _clapDetector
