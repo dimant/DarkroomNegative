@@ -11,6 +11,14 @@ import com.dtodorov.darkroomnegative.ImageProcessing.IFilter;
 public class Rotate implements IFilter {
     private float _degree;
 
+    public Rotate(){
+        _degree = 0.0f;
+    }
+
+    public Rotate(float degree) {
+        _degree = degree;
+    }
+
     public void configure(float degree) {
         _degree = degree;
     }

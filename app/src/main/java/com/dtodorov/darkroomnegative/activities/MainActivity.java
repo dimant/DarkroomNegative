@@ -16,8 +16,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.dtodorov.darkroomnegative.ImageProcessing.AsyncFilterTask;
+import com.dtodorov.darkroomnegative.ImageProcessing.IFilter;
 import com.dtodorov.darkroomnegative.ImageProcessing.RenderScriptContextFactory;
+import com.dtodorov.darkroomnegative.ImageProcessing.filters.CompositeFilter;
 import com.dtodorov.darkroomnegative.ImageProcessing.filters.Grayscale;
+import com.dtodorov.darkroomnegative.ImageProcessing.filters.Invert;
+import com.dtodorov.darkroomnegative.ImageProcessing.filters.Rotate;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.MainController;
 import com.dtodorov.darkroomnegative.helpers.EventDispatcher;
@@ -31,6 +35,10 @@ import com.dtodorov.darkroomnegative.services.Exposer;
 import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.Toaster;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -156,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
                 new Exposer(imageView, getContentResolver()),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
+                new AsyncFilterTask(
+                        new CompositeFilter(
+                                Arrays.asList(
+                                        new Invert(renderScriptContextFactory),
+                                        new Rotate(180.0f)))),
                 _clapDetector
         );
 
@@ -163,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState != null) {
             _imageViewCache = savedInstanceState.getParcelable("image");
-            _mainController.setImage(_imageViewCache);
+//            _mainController.setImage(_imageViewCache);
             _mainController.fire(MainController.Trigger.Home);
             _eventDispatcher.emit("enableView", R.id.beginExposureButton);
 

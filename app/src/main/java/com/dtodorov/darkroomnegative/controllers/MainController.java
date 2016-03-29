@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 /**
  * Created by ditodoro on 3/25/2016.
  */
-public class MainController implements IFilterCompletion, IClapListener, IFullScreenListener {
+public class MainController implements IClapListener, IFullScreenListener {
     private enum State {
         HomeScreen,
         ExposureSetup,
@@ -42,9 +42,12 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
     private IExposer _exposer;
     private IBitmapLoader _bitmapLoader;
     private IAsyncFilterTask _greyscaleFilterTask;
+    private IAsyncFilterTask _negativeFilterTask;
     private IClapDetector _clapDetector;
     private IEventDispatcher _eventDispatcher;
-    private Bitmap _bitmap;
+
+    private Bitmap _positiveBitmap;
+    private Bitmap _negativeBitmap;
 
     private int _exposureTime;
     private State _state;
@@ -56,6 +59,7 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
             IExposer exposer,
             IBitmapLoader bitmapLoader,
             IAsyncFilterTask greyscaleFilterTask,
+            IAsyncFilterTask negativeFilterTask,
             IClapDetector clapDetector
     )
     {
@@ -65,6 +69,7 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
         _exposer = exposer;
         _bitmapLoader = bitmapLoader;
         _greyscaleFilterTask = greyscaleFilterTask;
+        _negativeFilterTask = negativeFilterTask;
         _clapDetector = clapDetector;
 
         _stateMachine = new StateMachine<State, Trigger>(State.HomeScreen);
@@ -95,6 +100,7 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
                 .onEntry(new Action() {
                     @Override
                     public void doIt() {
+                        setImage(_negativeBitmap);
                         _eventDispatcher.emit("hideView", R.id.imageView);
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
                         _fullScreen.enterFullScreen();
@@ -103,13 +109,30 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
                 .onExit(new Action() {
                     @Override
                     public void doIt() {
+                        setImage(_positiveBitmap);
                         _exposer.cancel();
                         _fullScreen.exitFullScreen();
                     }
                 })
                 .permit(Trigger.Home, State.HomeScreen);
 
-        _greyscaleFilterTask.setCompletion(this);
+        _greyscaleFilterTask.setCompletion(new IFilterCompletion() {
+            @Override
+            public void filterFinished(Bitmap bitmap) {
+                _positiveBitmap = bitmap;
+                setImage(bitmap);
+                _negativeFilterTask.apply(bitmap);
+            }
+        });
+
+        _negativeFilterTask.setCompletion(new IFilterCompletion() {
+            @Override
+            public void filterFinished(Bitmap bitmap) {
+                _negativeBitmap = bitmap;
+                _eventDispatcher.emit("enableView", R.id.beginExposureButton);
+            }
+        });
+
         _fullScreen.setFullScreenListener(this);
     }
 
@@ -119,10 +142,9 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
         }
     }
 
-    public void setImage(Bitmap bitmap)
+    private void setImage(Bitmap bitmap)
     {
-        _bitmap = bitmap;
-        _eventDispatcher.emit("imageSet", _bitmap);
+        _eventDispatcher.emit("imageSet", bitmap);
     }
 
     public void setExposureTime(int exposureTime) {
@@ -138,12 +160,6 @@ public class MainController implements IFilterCompletion, IClapListener, IFullSc
         } catch (FileNotFoundException e) {
             _toaster.Toast(R.string.error_image_read);
         }
-    }
-
-    @Override
-    public void filterFinished(Bitmap bitmap) {
-        setImage(bitmap);
-        _eventDispatcher.emit("enableView", R.id.beginExposureButton);
     }
 
     @Override
