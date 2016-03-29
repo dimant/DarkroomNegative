@@ -17,7 +17,9 @@ public class Grayscale extends RenderScriptFilter {
     }
 
     @Override
-    protected ScriptC getScriptC() {
-        return new ScriptC_Grayscale(getRenderScript());
+    protected void runScriptC(Allocation inputAllocation, Allocation outputAllocation) {
+        ScriptC_Grayscale grayscale = new ScriptC_Grayscale(getRenderScript());
+        grayscale.forEach_root(inputAllocation, outputAllocation);
     }
+
 }

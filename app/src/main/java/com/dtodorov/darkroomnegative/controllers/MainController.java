@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 /**
  * Created by ditodoro on 3/25/2016.
  */
-public class MainController implements IClapListener, IFullScreenListener {
+public class MainController implements IClapListener {
     private enum State {
         HomeScreen,
         ExposureSetup,
@@ -43,7 +43,6 @@ public class MainController implements IClapListener, IFullScreenListener {
     private IBitmapLoader _bitmapLoader;
     private IAsyncFilterTask _greyscaleFilterTask;
     private IAsyncFilterTask _negativeFilterTask;
-    private IClapDetector _clapDetector;
     private IEventDispatcher _eventDispatcher;
 
     private Bitmap _positiveBitmap;
@@ -59,8 +58,7 @@ public class MainController implements IClapListener, IFullScreenListener {
             IExposer exposer,
             IBitmapLoader bitmapLoader,
             IAsyncFilterTask greyscaleFilterTask,
-            IAsyncFilterTask negativeFilterTask,
-            IClapDetector clapDetector
+            IAsyncFilterTask negativeFilterTask
     )
     {
         _eventDispatcher = eventDispatcher;
@@ -70,7 +68,6 @@ public class MainController implements IClapListener, IFullScreenListener {
         _bitmapLoader = bitmapLoader;
         _greyscaleFilterTask = greyscaleFilterTask;
         _negativeFilterTask = negativeFilterTask;
-        _clapDetector = clapDetector;
 
         _stateMachine = new StateMachine<State, Trigger>(State.HomeScreen);
 
@@ -100,7 +97,7 @@ public class MainController implements IClapListener, IFullScreenListener {
                 .onEntry(new Action() {
                     @Override
                     public void doIt() {
-                        setImage(_negativeBitmap);
+                        _eventDispatcher.emit("imageSet", _negativeBitmap);
                         _eventDispatcher.emit("hideView", R.id.imageView);
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
                         _fullScreen.enterFullScreen();
@@ -109,7 +106,7 @@ public class MainController implements IClapListener, IFullScreenListener {
                 .onExit(new Action() {
                     @Override
                     public void doIt() {
-                        setImage(_positiveBitmap);
+                        _eventDispatcher.emit("imageSet", _positiveBitmap);
                         _exposer.cancel();
                         _fullScreen.exitFullScreen();
                     }
@@ -120,7 +117,7 @@ public class MainController implements IClapListener, IFullScreenListener {
             @Override
             public void filterFinished(Bitmap bitmap) {
                 _positiveBitmap = bitmap;
-                setImage(bitmap);
+                _eventDispatcher.emit("imageSet", _positiveBitmap);
                 _negativeFilterTask.apply(bitmap);
             }
         });
@@ -133,23 +130,24 @@ public class MainController implements IClapListener, IFullScreenListener {
             }
         });
 
-        _fullScreen.setFullScreenListener(this);
+        _fullScreen.setFullScreenListener(new IFullScreenListener() {
+            @Override
+            public void onEnteredFullScreen() {
+
+            }
+
+            @Override
+            public void onExitedFullScreen() {
+                _eventDispatcher.emit("showView", R.id.imageView);
+                _eventDispatcher.emit("showView", R.id.controlPanel);
+            }
+        });
     }
 
     public void fire(Trigger trigger) {
         if(_stateMachine.canFire(trigger)) {
             _stateMachine.fire(trigger);
         }
-    }
-
-    private void setImage(Bitmap bitmap)
-    {
-        _eventDispatcher.emit("imageSet", bitmap);
-    }
-
-    public void setExposureTime(int exposureTime) {
-        _exposureTime = exposureTime;
-        _eventDispatcher.emit("exposureTimeChanged", new Integer(exposureTime));
     }
 
     public void onImagePicked(Uri uri)
@@ -162,22 +160,34 @@ public class MainController implements IClapListener, IFullScreenListener {
         }
     }
 
+    public void restoreImages(Bitmap positiveBitmap, Bitmap negativeBitmap) {
+        _positiveBitmap = positiveBitmap;
+        _negativeBitmap = negativeBitmap;
+        _eventDispatcher.emit("imageSet", _positiveBitmap);
+        _eventDispatcher.emit("enableView", R.id.beginExposureButton);
+    }
+
+    public Bitmap getPositiveBitmap() {
+        return _positiveBitmap;
+    }
+
+    public Bitmap getNegativeBitmap() {
+        return _negativeBitmap;
+    }
+
+    public int getExposureTime() {
+        return _exposureTime;
+    }
+
+    public void setExposureTime(int exposureTime) {
+        _exposureTime = exposureTime;
+        _eventDispatcher.emit("exposureTimeChanged", new Integer(exposureTime));
+    }
+
     @Override
     public void onClapped() {
         if(_stateMachine.getState() == State.FullScreen) {
             _exposer.expose(_exposureTime);
         }
     }
-
-    @Override
-    public void onEnteredFullScreen() {
-
-    }
-
-    @Override
-    public void onExitedFullScreen() {
-        _eventDispatcher.emit("showView", R.id.imageView);
-        _eventDispatcher.emit("showView", R.id.controlPanel);
-    }
-
 }

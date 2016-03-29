@@ -1,6 +1,7 @@
 package com.dtodorov.darkroomnegative.activities;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -24,6 +25,7 @@ import com.dtodorov.darkroomnegative.ImageProcessing.filters.Invert;
 import com.dtodorov.darkroomnegative.ImageProcessing.filters.Rotate;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.controllers.MainController;
+import com.dtodorov.darkroomnegative.fragments.MainFragment;
 import com.dtodorov.darkroomnegative.helpers.EventDispatcher;
 import com.dtodorov.darkroomnegative.helpers.IConverter;
 import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
@@ -45,26 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private final int PICK_PHOTO_FOR_EXPOSURE = 1;
 
     private MainController _mainController;
+    private MainFragment _mainFragment;
     private IEventDispatcher _eventDispatcher;
     private IClapDetector _clapDetector;
-    private Bitmap _imageViewCache;
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable("image", _imageViewCache);
-
-        final SeekBar exposureTimeControl = (SeekBar) findViewById(R.id.exposureTimeSeekBar);
-        outState.putInt("exposureTime", exposureTimeControl.getProgress());
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        _clapDetector.stop();
-        super.onDestroy();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,12 +135,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void callback(Object param) {
                 Bitmap bitmap = (Bitmap) param;
-                _imageViewCache = bitmap;
                 imageView.setImageBitmap(bitmap);
             }
         });
-
-        _clapDetector = new ClapDetector();
 
         _mainController = new MainController(
                 _eventDispatcher,
@@ -168,28 +150,46 @@ public class MainActivity extends AppCompatActivity {
                         new CompositeFilter(
                                 Arrays.asList(
                                         new Invert(renderScriptContextFactory),
-                                        new Rotate(180.0f)))),
-                _clapDetector
+                                        new Rotate(180.0f))))
         );
 
-        int exposureTime = 5;
 
-        if(savedInstanceState != null) {
-            _imageViewCache = savedInstanceState.getParcelable("image");
-//            _mainController.setImage(_imageViewCache);
-            _mainController.fire(MainController.Trigger.Home);
-            _eventDispatcher.emit("enableView", R.id.beginExposureButton);
+        FragmentManager fm = getFragmentManager();
+        _mainFragment = (MainFragment) fm.findFragmentByTag("mainFragment");
 
-            exposureTime = savedInstanceState.getInt("exposureTime");
-        } else {
+        if(_mainFragment == null) {
+            _mainFragment = new MainFragment();
+            fm.beginTransaction().add(_mainFragment, "mainFragment").commit();
+
+            _clapDetector = new ClapDetector();
+            _clapDetector.start();
             _eventDispatcher.emit("disableView", R.id.beginExposureButton);
+            _mainController.setExposureTime(5);
+        } else {
+            Bitmap positiveImage = _mainFragment.getObject(MainFragment.POSITIVE_IMAGE);
+            Bitmap negativeImage = _mainFragment.getObject(MainFragment.NEGATIVE_IMAGE);
+            Integer exposureTime = _mainFragment.getObject(MainFragment.EXPOSURE_TIME);
+            _clapDetector = _mainFragment.getObject(MainFragment.CLAP_DETECTOR);
 
+            _mainController.restoreImages(positiveImage, negativeImage);
+            _mainController.setExposureTime(exposureTime);
+
+            _mainController.fire(MainController.Trigger.Home);
         }
 
-        _mainController.setExposureTime(exposureTime);
-        exposureTimeControl.setProgress(exposureTime);
+        exposureTimeControl.setProgress(_mainController.getExposureTime());
         _clapDetector.setClapListener(_mainController);
-        _clapDetector.start();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        _clapDetector.setClapListener(null);
+        _mainFragment.putObject(MainFragment.POSITIVE_IMAGE, _mainController.getPositiveBitmap());
+        _mainFragment.putObject(MainFragment.NEGATIVE_IMAGE, _mainController.getNegativeBitmap());
+        _mainFragment.putObject(MainFragment.EXPOSURE_TIME, _mainController.getExposureTime());
+        _mainFragment.putObject(MainFragment.CLAP_DETECTOR, _clapDetector);
     }
 
     @Override

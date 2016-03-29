@@ -18,7 +18,8 @@ public class Invert extends RenderScriptFilter {
     }
 
     @Override
-    protected ScriptC getScriptC() {
-        return new ScriptC_Invert(getRenderScript());
+    protected void runScriptC(Allocation inputAllocation, Allocation outputAllocation) {
+        ScriptC_Invert invert = new ScriptC_Invert(getRenderScript());
+        invert.forEach_root(inputAllocation, outputAllocation);
     }
 }

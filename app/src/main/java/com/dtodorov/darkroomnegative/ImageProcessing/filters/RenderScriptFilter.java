@@ -28,13 +28,12 @@ public abstract class RenderScriptFilter implements IFilter {
         Allocation inputAllocation = Allocation.createFromBitmap(_renderScript, bitmap);
         Allocation outputAllocation = Allocation.createFromBitmap(_renderScript, result);
 
-        ScriptC_Invert invert = new ScriptC_Invert(_renderScript);
+        runScriptC(inputAllocation, outputAllocation);
 
-        invert.forEach_root(inputAllocation, outputAllocation);
         outputAllocation.copyTo(result);
 
         return result;
     }
 
-    protected abstract ScriptC getScriptC();
+    protected abstract void runScriptC(Allocation inputAllocation, Allocation outputAllocation);
 }
