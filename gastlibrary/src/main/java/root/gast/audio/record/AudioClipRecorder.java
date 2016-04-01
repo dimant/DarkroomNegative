@@ -3,15 +3,16 @@ package root.gast.audio.record;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Pair;
 
 /**
  * Created by diman on 3/31/2016.
  */
 public class AudioClipRecorder implements IAudioClipRecorder {
     private final String TAG = "AudioClipRecorder";
-    private int _sampleRate = 8000;
-    private int _format = AudioFormat.ENCODING_PCM_16BIT;
+    private int _sampleRate;
 
     private Boolean _isRunning;
     private AudioRecord _recorder;
@@ -22,12 +23,38 @@ public class AudioClipRecorder implements IAudioClipRecorder {
         _isRunning = false;
     }
 
-    private int determineMinimumBufferSize(final int sampleRate, int encoding)
-    {
-        int minBufferSize =
-                AudioRecord.getMinBufferSize(sampleRate,
-                        AudioFormat.CHANNEL_IN_MONO, encoding);
-        return minBufferSize;
+    private Pair<AudioRecord, short[]> bruteForceFormat() {
+        int[] sampleRates = new int[] {8000, 11025, 22050, 44100};
+        short[] formats = new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT};
+        short[] channels = new short[] { AudioFormat.CHANNEL_IN_MONO, AudioFormat.CHANNEL_IN_STEREO };
+
+        for(int sampleRate : sampleRates) {
+            for(short format : formats) {
+                for(int channel : channels) {
+                    try {
+                        int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, format);
+                        if(bufferSize != AudioRecord.ERROR_BAD_VALUE) {
+                            AudioRecord record = new AudioRecord(
+                                    MediaRecorder.AudioSource.MIC,
+                                    sampleRate,
+                                    channel,
+                                    format,
+                                    bufferSize);
+
+                            if(record.getState() == AudioRecord.STATE_INITIALIZED) {
+                                _sampleRate = sampleRate;
+                                short[] buffer = new short[bufferSize * 3];
+                                return new Pair<AudioRecord, short[]>(record, buffer);
+                            }
+                        }
+                    } catch(Exception e) {
+                        // continue trying
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -35,20 +62,21 @@ public class AudioClipRecorder implements IAudioClipRecorder {
         if(_isRunning)
             return;
 
-        int bufferSize = determineMinimumBufferSize(_sampleRate, _format);
+        Pair<AudioRecord, short[]> recordAllocation = bruteForceFormat();
+        short[] readBuffer;
 
-        _recorder = new AudioRecord(
-                MediaRecorder.AudioSource.MIC,
-                _sampleRate,
-                AudioFormat.CHANNEL_IN_MONO,
-                _format,
-                bufferSize * 3 // give it extra space to prevent overflow
-        );
-        _recorder.startRecording();
-        _isRunning = true;
+        if(recordAllocation != null) {
+            _recorder = recordAllocation.first;
+            readBuffer = recordAllocation.second;
 
-        final short[] readBuffer = new short[bufferSize];
-        while(tryToHear(readBuffer) == false);
+            _recorder.startRecording();
+            _isRunning = true;
+
+            while(tryToHear(readBuffer) == false);
+        } else {
+            _listener.heard(null, _sampleRate);
+        }
+
         stop();
     }
 

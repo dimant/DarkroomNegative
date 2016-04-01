@@ -55,6 +55,10 @@ public class LoudNoiseDetector implements IAudioClipListener
     @Override
     public boolean heard(short[] data, int sampleRate)
     {
+        if(data == null) {
+            _listener.heard();
+        }
+
         boolean heard = false;
         // use rms to take the entire audio signal into account
         // and discount any one single high amplitude
@@ -82,9 +86,9 @@ public class LoudNoiseDetector implements IAudioClipListener
         double ms = 0;
         for (int i = 0; i < nums.length; i++)
         {
-            ms += nums[i] * nums[i];
+            ms += nums[i] * nums[i] / nums.length;
         }
-        ms /= nums.length;
+
         return Math.sqrt(ms);
     }
 }
