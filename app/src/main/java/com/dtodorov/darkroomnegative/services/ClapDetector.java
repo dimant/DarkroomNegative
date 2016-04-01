@@ -55,9 +55,15 @@ public class ClapDetector implements IClapDetector {
 
     @Override
     public void stop() {
-        _recorder.stop();
+        if(_recorder != null)
+            _recorder.stop();
         _recorder = null;
-        _task.cancel(true);
-        _task = null;
+
+        if(_task != null) {
+            if(_task.isCancelled() == false) {
+                _task.cancel(true);
+            }
+            _task = null;
+        }
     }
 }
