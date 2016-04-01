@@ -164,6 +164,11 @@ public class MainController implements IClapListener, IExposerListener {
     public void onImagePicked(Uri uri)
     {
         try {
+            _positiveBitmap = null;
+            _negativeBitmap = null;
+
+            _eventDispatcher.emit("imageSet", null);
+
             Bitmap bitmap =_bitmapLoader.Load(uri);
             _greyscaleFilterTask.apply(bitmap);
         } catch (FileNotFoundException e) {
