@@ -32,6 +32,9 @@ public abstract class RenderScriptFilter implements IFilter {
 
         outputAllocation.copyTo(result);
 
+        inputAllocation.destroy();
+        outputAllocation.destroy();
+
         return result;
     }
 

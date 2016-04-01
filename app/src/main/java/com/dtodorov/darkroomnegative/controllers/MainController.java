@@ -166,6 +166,7 @@ public class MainController implements IClapListener, IExposerListener {
         try {
             _positiveBitmap = null;
             _negativeBitmap = null;
+            System.gc();
 
             _eventDispatcher.emit("imageSet", null);
 

@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -168,8 +166,13 @@ public class MainActivity extends AppCompatActivity {
             _mainController.setExposureTime(5);
         } else {
             Bitmap positiveImage = _mainFragment.getObject(MainFragment.POSITIVE_IMAGE);
+            _mainFragment.putObject(MainFragment.POSITIVE_IMAGE, null);
+
             Bitmap negativeImage = _mainFragment.getObject(MainFragment.NEGATIVE_IMAGE);
+            _mainFragment.putObject(MainFragment.NEGATIVE_IMAGE, null);
+
             Integer exposureTime = _mainFragment.getObject(MainFragment.EXPOSURE_TIME);
+            _mainFragment.putObject(MainFragment.EXPOSURE_TIME, null);
 
             _mainController.restoreImages(positiveImage, negativeImage);
             _mainController.setExposureTime(exposureTime);
