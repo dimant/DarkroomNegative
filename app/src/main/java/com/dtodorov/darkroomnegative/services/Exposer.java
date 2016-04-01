@@ -17,11 +17,16 @@ public class Exposer implements IExposer {
     private ContentResolver _contentResolver;
     private int _currentBrightness;
     private int _currentBrightnessMode;
+    private IExposerListener _listener;
 
     public Exposer(View view, ContentResolver contentResolver) {
         _view = view;
         _contentResolver = contentResolver;
         _handler = new Handler(Looper.getMainLooper());
+    }
+
+    public void setListener(IExposerListener listener) {
+        _listener = listener;
     }
 
     private int getSettingsInt(String setting) throws Settings.SettingNotFoundException {
@@ -63,11 +68,16 @@ public class Exposer implements IExposer {
 
     @Override
     public void expose(int seconds) {
-        _currentBrightnessMode = getBrightnessMode();
-        _currentBrightness = getBrightness();
-        setBrightnessMode(Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-        setBrightness(255);
-        _view.setVisibility(View.VISIBLE);
+        _handler.post(new Runnable() {
+            @Override
+            public void run() {
+                _currentBrightnessMode = getBrightnessMode();
+                _currentBrightness = getBrightness();
+                setBrightnessMode(Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+                setBrightness(255);
+                _view.setVisibility(View.VISIBLE);
+            }
+        });
 
         _handler.postDelayed(new Runnable() {
             @Override
@@ -75,6 +85,7 @@ public class Exposer implements IExposer {
                 setBrightness(_currentBrightness);
                 setBrightnessMode(_currentBrightnessMode);
                 _view.setVisibility(View.INVISIBLE);
+                _listener.onExposeFinished();
             }
         }, seconds * 1000);
     }

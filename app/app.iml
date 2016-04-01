@@ -97,5 +97,6 @@
     <orderEntry type="library" exported="" name="stateless4j-2.5.2-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="design-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.2.1" level="project" />
+    <orderEntry type="module" module-name="gastlibrary" exported="" />
   </component>
 </module>

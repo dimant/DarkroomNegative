@@ -7,9 +7,10 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +19,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.dtodorov.darkroomnegative.ImageProcessing.AsyncFilterTask;
-import com.dtodorov.darkroomnegative.ImageProcessing.IFilter;
 import com.dtodorov.darkroomnegative.ImageProcessing.RenderScriptContextFactory;
 import com.dtodorov.darkroomnegative.ImageProcessing.filters.CompositeFilter;
 import com.dtodorov.darkroomnegative.ImageProcessing.filters.Grayscale;
@@ -39,9 +39,10 @@ import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.Toaster;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+
+import root.gast.audio.interp.LoudNoiseDetectorAboveNormal;
+import root.gast.audio.record.AudioClipRecorder;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -151,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
                         new CompositeFilter(
                                 Arrays.asList(
                                         new Invert(renderScriptContextFactory),
-                                        new Rotate(180.0f))))
+                                        new Rotate(180.0f)))),
+                new ClapDetector()
         );
 
 
@@ -176,18 +178,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         exposureTimeControl.setProgress(_mainController.getExposureTime());
-
-        _clapDetector = new ClapDetector();
-        _clapDetector.start();
-        _clapDetector.setClapListener(_mainController);
     }
 
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
-        _clapDetector.setClapListener(null);
-        _clapDetector.stop();
+
         _mainFragment.putObject(MainFragment.POSITIVE_IMAGE, _mainController.getPositiveBitmap());
         _mainFragment.putObject(MainFragment.NEGATIVE_IMAGE, _mainController.getNegativeBitmap());
         _mainFragment.putObject(MainFragment.EXPOSURE_TIME, _mainController.getExposureTime());

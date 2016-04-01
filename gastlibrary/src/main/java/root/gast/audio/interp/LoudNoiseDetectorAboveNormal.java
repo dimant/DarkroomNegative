@@ -29,7 +29,6 @@ public class LoudNoiseDetectorAboveNormal implements IAudioClipListener
 {
     private static final String TAG = "MultipleClapDetector";
 
-    private double averageVolume;
 
     private double lowPassAlpha = 0.5;
 
@@ -37,11 +36,22 @@ public class LoudNoiseDetectorAboveNormal implements IAudioClipListener
 
     private double INCREASE_FACTOR = 100.0;
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
-    public LoudNoiseDetectorAboveNormal()
-    {
-        averageVolume = STARTING_AVERAGE;
+    private double averageVolume = STARTING_AVERAGE;
+
+    private ILoudNoiseListener _listener;
+
+    public LoudNoiseDetectorAboveNormal() {
+
+    }
+
+    public LoudNoiseDetectorAboveNormal(ILoudNoiseListener listener) {
+        _listener = listener;
+    }
+
+    public void setLoudNoiseListener(ILoudNoiseListener listener) {
+        _listener = listener;
     }
 
     @Override
@@ -63,6 +73,9 @@ public class LoudNoiseDetectorAboveNormal implements IAudioClipListener
         {
             Log.d(TAG, "heard");
             heard = true;
+            if(_listener != null) {
+                _listener.heard();
+            }
         }
         else
         {

@@ -27,15 +27,24 @@ public class LoudNoiseDetector implements IAudioClipListener
 {
     private static final String TAG = "LoudNoiseDetector";
 
-    private double volumeThreshold;
 
     public static final int DEFAULT_LOUDNESS_THRESHOLD = 2000;
+    private double volumeThreshold = DEFAULT_LOUDNESS_THRESHOLD;
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
+
+    private ILoudNoiseListener _listener;
 
     public LoudNoiseDetector()
     {
-        volumeThreshold = DEFAULT_LOUDNESS_THRESHOLD;
+    }
+
+    public LoudNoiseDetector(ILoudNoiseListener listener) {
+        _listener = listener;
+    }
+
+    public void setListener(ILoudNoiseListener listener) {
+        _listener = listener;
     }
 
     public LoudNoiseDetector(double volumeThreshold)
@@ -60,6 +69,9 @@ public class LoudNoiseDetector implements IAudioClipListener
         {
             Log.d(TAG, "heard");
             heard = true;
+            if(_listener != null) {
+                _listener.heard();
+            }
         }
 
         return heard;

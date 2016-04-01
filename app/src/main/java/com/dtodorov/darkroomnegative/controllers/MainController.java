@@ -11,6 +11,7 @@ import com.dtodorov.darkroomnegative.services.IBitmapLoader;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.IClapListener;
 import com.dtodorov.darkroomnegative.services.IExposer;
+import com.dtodorov.darkroomnegative.services.IExposerListener;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
 import com.dtodorov.darkroomnegative.services.IFullScreenListener;
 import com.dtodorov.darkroomnegative.services.IToaster;
@@ -19,10 +20,12 @@ import com.github.oxo42.stateless4j.delegates.Action;
 
 import java.io.FileNotFoundException;
 
+import root.gast.audio.interp.ILoudNoiseListener;
+
 /**
  * Created by ditodoro on 3/25/2016.
  */
-public class MainController implements IClapListener {
+public class MainController implements IClapListener, IExposerListener {
     private enum State {
         HomeScreen,
         ExposureSetup,
@@ -44,6 +47,7 @@ public class MainController implements IClapListener {
     private IAsyncFilterTask _greyscaleFilterTask;
     private IAsyncFilterTask _negativeFilterTask;
     private IEventDispatcher _eventDispatcher;
+    private IClapDetector _clapDetector;
 
     private Bitmap _positiveBitmap;
     private Bitmap _negativeBitmap;
@@ -58,7 +62,8 @@ public class MainController implements IClapListener {
             IExposer exposer,
             IBitmapLoader bitmapLoader,
             IAsyncFilterTask greyscaleFilterTask,
-            IAsyncFilterTask negativeFilterTask
+            IAsyncFilterTask negativeFilterTask,
+            IClapDetector clapDetector
     )
     {
         _eventDispatcher = eventDispatcher;
@@ -68,6 +73,10 @@ public class MainController implements IClapListener {
         _bitmapLoader = bitmapLoader;
         _greyscaleFilterTask = greyscaleFilterTask;
         _negativeFilterTask = negativeFilterTask;
+        _clapDetector = clapDetector;
+
+        _clapDetector.setListener(this);
+        _exposer.setListener(this);
 
         _stateMachine = new StateMachine<State, Trigger>(State.HomeScreen);
 
@@ -101,13 +110,15 @@ public class MainController implements IClapListener {
                         _eventDispatcher.emit("hideView", R.id.imageView);
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
                         _fullScreen.enterFullScreen();
+                        _clapDetector.start();
                     }
                 })
                 .onExit(new Action() {
                     @Override
                     public void doIt() {
-                        _eventDispatcher.emit("imageSet", _positiveBitmap);
+                        _clapDetector.stop();
                         _exposer.cancel();
+                        _eventDispatcher.emit("imageSet", _positiveBitmap);
                         _fullScreen.exitFullScreen();
                     }
                 })
@@ -185,9 +196,16 @@ public class MainController implements IClapListener {
     }
 
     @Override
-    public void onClapped() {
+    public void onClap() {
         if(_stateMachine.getState() == State.FullScreen) {
             _exposer.expose(_exposureTime);
+        }
+    }
+
+    @Override
+    public void onExposeFinished() {
+        if(_stateMachine.getState() == State.FullScreen) {
+            _clapDetector.start();
         }
     }
 }
