@@ -35,15 +35,16 @@
         android:layout_gravity="bottom"
         android:background="#90000000">
 
+        <!--android:thumbTint="#a0b5ff"-->
+        <!--android:progressBackgroundTint="#5a7efd"-->
+        <!--android:progressTint="#c9d5ff"-->
+
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/exposureTimeSeekBar"
             android:layout_marginBottom="50dp"
-            android:thumbTint="#a0b5ff"
             android:splitTrack="false"
-            android:progressBackgroundTint="#5a7efd"
-            android:progressTint="#c9d5ff"
             android:max="60"
             android:visibility="gone" />
 
