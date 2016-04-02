@@ -34,7 +34,6 @@ public class ClapDetector implements IClapDetector {
 
             @Override
             protected Void doInBackground(Void... params) {
-
                 _recorder = new AudioClipRecorder(
                     new LoudNoiseDetector(new ILoudNoiseListener() {
                         @Override

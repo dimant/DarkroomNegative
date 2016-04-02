@@ -23,34 +23,28 @@ public class AudioClipRecorder implements IAudioClipRecorder {
     }
 
     private Pair<AudioRecord, short[]> bruteForceFormat() {
-        int[] sampleRates = new int[] {8000, 11025, 22050, 44100};
-        short[] formats = new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT};
-        short[] channels = new short[] { AudioFormat.CHANNEL_IN_MONO, AudioFormat.CHANNEL_IN_STEREO };
+        int sampleRate =  44100;
+        short format= AudioFormat.ENCODING_PCM_16BIT;
+        short channel = AudioFormat.CHANNEL_IN_MONO;
 
-        for(int sampleRate : sampleRates) {
-            for(short format : formats) {
-                for(int channel : channels) {
-                    try {
-                        int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, format);
-                        if(bufferSize != AudioRecord.ERROR_BAD_VALUE) {
-                            AudioRecord record = new AudioRecord(
-                                    MediaRecorder.AudioSource.MIC,
-                                    sampleRate,
-                                    channel,
-                                    format,
-                                    bufferSize);
+        try {
+            int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channel, format);
+            if(bufferSize != AudioRecord.ERROR_BAD_VALUE) {
+                AudioRecord record = new AudioRecord(
+                        MediaRecorder.AudioSource.DEFAULT,
+                        sampleRate,
+                        channel,
+                        format,
+                        bufferSize);
 
-                            if(record.getState() == AudioRecord.STATE_INITIALIZED) {
-                                _sampleRate = sampleRate;
-                                short[] buffer = new short[bufferSize * 3];
-                                return new Pair<AudioRecord, short[]>(record, buffer);
-                            }
-                        }
-                    } catch(Exception e) {
-                        // continue trying
-                    }
+                if(record.getState() == AudioRecord.STATE_INITIALIZED) {
+                    _sampleRate = sampleRate;
+                    short[] buffer = new short[bufferSize * 3];
+                    return new Pair<AudioRecord, short[]>(record, buffer);
                 }
             }
+        } catch(Exception e) {
+            // continue trying
         }
 
         return null;
@@ -82,7 +76,7 @@ public class AudioClipRecorder implements IAudioClipRecorder {
     private synchronized boolean tryToHear(short[] readBuffer) {
         boolean heard = false;
         if(_isRunning) {
-            int result = _recorder.read(readBuffer, 0, readBuffer.length);
+            int result = _recorder.read(readBuffer, 0, readBuffer.length / 3);
 
             switch(result) {
                 case AudioRecord.ERROR_INVALID_OPERATION:
