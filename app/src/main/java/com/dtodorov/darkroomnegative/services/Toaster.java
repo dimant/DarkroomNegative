@@ -9,19 +9,18 @@ import android.widget.Toast;
  */
 public class Toaster implements IToaster {
     private Context _context;
-    private Resources _resources;
+    private IStringResolver _stringResolver;
 
-    public Toaster(Context context, Resources resources)
+    public Toaster(Context context, IStringResolver stringResolver)
     {
         _context = context;
-        _resources = resources;
+        _stringResolver = stringResolver;
     }
 
     @Override
     public void Toast(int id)
     {
-        String text = _resources.getString(id);
-        this.Toast(text);
+        this.Toast(_stringResolver.getString(id));
     }
 
     @Override

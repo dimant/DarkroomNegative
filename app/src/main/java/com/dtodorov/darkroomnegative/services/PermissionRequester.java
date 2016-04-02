@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class PermissionRequester implements IPermissionRequester {
     private Map<String, Integer> _permissionCodes;
+    private Map<String, Boolean> _explained;
+
     private int _lastCode;
 
     private Activity _context;
@@ -28,6 +30,7 @@ public class PermissionRequester implements IPermissionRequester {
     }
 
     private void Init(Activity context, IPermissionListener listener) {
+        _explained = new HashMap<String, Boolean>();
         _context = context;
         _permissionCodes = new HashMap<String, Integer>();
         _listener = listener;
@@ -58,10 +61,16 @@ public class PermissionRequester implements IPermissionRequester {
     }
 
     @Override
-    public void obtainPermission(String permission) {
-        if(ContextCompat.checkSelfPermission(_context, permission) != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(_context, permission)) {
+    public int checkPermission(String permission) {
+        return ContextCompat.checkSelfPermission(_context, permission);
+    }
 
+    @Override
+    public void obtainPermission(String permission) {
+        if(checkPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+            if(_explained.containsKey(permission) == false && ActivityCompat.shouldShowRequestPermissionRationale(_context, permission)) {
+                _listener.explainPermission(permission);
+                _explained.put(permission, true);
             } else {
                 ActivityCompat.requestPermissions(_context, new String[] { permission }, getCode(permission));
             }

@@ -36,6 +36,10 @@ import com.dtodorov.darkroomnegative.services.DialogPresenter;
 import com.dtodorov.darkroomnegative.services.Exposer;
 import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
+import com.dtodorov.darkroomnegative.services.IStringResolver;
+import com.dtodorov.darkroomnegative.services.PermissionRequester;
+import com.dtodorov.darkroomnegative.services.PermissionService;
+import com.dtodorov.darkroomnegative.services.StringResolver;
 import com.dtodorov.darkroomnegative.services.Toaster;
 
 import java.util.Arrays;
@@ -50,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private MainController _mainController;
     private MainFragment _mainFragment;
     private IEventDispatcher _eventDispatcher;
-    private IClapDetector _clapDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,9 +143,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        IStringResolver stringResolver = new StringResolver(getResources());
         _mainController = new MainController(
                 _eventDispatcher,
-                new Toaster(context, resources),
+                new Toaster(context, stringResolver),
                 new FullScreen(this, contentControl),
                 new Exposer(imageView, getContentResolver()),
                 new BitmapLoader(context),
@@ -153,7 +157,10 @@ public class MainActivity extends AppCompatActivity {
                                         new Invert(renderScriptContextFactory),
                                         new Rotate(180.0f)))),
                 new ClapDetector(),
-                new DialogPresenter(getFragmentManager())
+                new PermissionService(
+                        new PermissionRequester(this),
+                        new DialogPresenter(getFragmentManager())),
+                stringResolver
         );
 
 

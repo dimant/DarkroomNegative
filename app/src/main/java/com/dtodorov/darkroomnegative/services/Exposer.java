@@ -18,6 +18,7 @@ public class Exposer implements IExposer {
     private int _currentBrightness;
     private int _currentBrightnessMode;
     private IExposerListener _listener;
+    private boolean _changeBrightness;
 
     public Exposer(View view, ContentResolver contentResolver) {
         _view = view;
@@ -34,7 +35,9 @@ public class Exposer implements IExposer {
     }
 
     private void setSettingsInt(String setting, int value) {
-        Settings.System.putInt(_contentResolver, setting, value);
+        if(_changeBrightness) {
+            Settings.System.putInt(_contentResolver, setting, value);
+        }
     }
 
     private int getBrightness() {
@@ -68,15 +71,14 @@ public class Exposer implements IExposer {
 
     @Override
     public void expose(int seconds, final boolean changeBrightness) {
+        _changeBrightness = changeBrightness;
         _handler.post(new Runnable() {
             @Override
             public void run() {
                 _currentBrightnessMode = getBrightnessMode();
                 _currentBrightness = getBrightness();
-                if (changeBrightness) {
-                    setBrightnessMode(Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-                    setBrightness(255);
-                }
+                setBrightnessMode(Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+                setBrightness(255);
                 _view.setVisibility(View.VISIBLE);
             }
         });
@@ -84,10 +86,8 @@ public class Exposer implements IExposer {
         _handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(changeBrightness) {
-                    setBrightness(_currentBrightness);
-                    setBrightnessMode(_currentBrightnessMode);
-                }
+                setBrightness(_currentBrightness);
+                setBrightnessMode(_currentBrightnessMode);
                 _view.setVisibility(View.INVISIBLE);
                 _listener.onExposeFinished();
             }

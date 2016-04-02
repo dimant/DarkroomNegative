@@ -16,6 +16,7 @@ import com.dtodorov.darkroomnegative.services.IExposerListener;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
 import com.dtodorov.darkroomnegative.services.IFullScreenListener;
 import com.dtodorov.darkroomnegative.services.IPermissionService;
+import com.dtodorov.darkroomnegative.services.IStringResolver;
 import com.dtodorov.darkroomnegative.services.IToaster;
 import com.github.oxo42.stateless4j.StateMachine;
 import com.github.oxo42.stateless4j.delegates.Action;
@@ -49,8 +50,8 @@ public class MainController implements IClapListener, IExposerListener {
     private IAsyncFilterTask _negativeFilterTask;
     private IEventDispatcher _eventDispatcher;
     private IClapDetector _clapDetector;
-    private IDialogPresenter _dialogPresenter;
     private IPermissionService _permissionService;
+    private IStringResolver _stringResolver;
 
     private Bitmap _positiveBitmap;
     private Bitmap _negativeBitmap;
@@ -66,8 +67,8 @@ public class MainController implements IClapListener, IExposerListener {
             IAsyncFilterTask greyscaleFilterTask,
             IAsyncFilterTask negativeFilterTask,
             IClapDetector clapDetector,
-            IDialogPresenter dialogPresenter,
-            IPermissionService permissionService
+            IPermissionService permissionService,
+            IStringResolver stringResolver
     )
     {
         _eventDispatcher = eventDispatcher;
@@ -78,8 +79,8 @@ public class MainController implements IClapListener, IExposerListener {
         _greyscaleFilterTask = greyscaleFilterTask;
         _negativeFilterTask = negativeFilterTask;
         _clapDetector = clapDetector;
-        _dialogPresenter = dialogPresenter;
         _permissionService = permissionService;
+        _stringResolver = stringResolver;
 
         _clapDetector.setListener(this);
         _exposer.setListener(this);
@@ -117,10 +118,10 @@ public class MainController implements IClapListener, IExposerListener {
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
                         _fullScreen.enterFullScreen();
 
-                        if (permissionGranted(android.Manifest.permission.RECORD_AUDIO)) {
+                        if (isPermissionGranted(android.Manifest.permission.RECORD_AUDIO)) {
                             _clapDetector.start();
                         } else {
-                            _exposer.expose(_exposureTime, permissionGranted(android.Manifest.permission.WRITE_SETTINGS));
+                            _exposer.expose(_exposureTime, isPermissionGranted(android.Manifest.permission.WRITE_SETTINGS));
                         }
                     }
                 })
@@ -165,24 +166,22 @@ public class MainController implements IClapListener, IExposerListener {
             }
         });
 
-        obtainPermissionIfNotGranted(android.Manifest.permission.RECORD_AUDIO);
-        obtainPermissionIfNotGranted(android.Manifest.permission.WRITE_SETTINGS);
+        obtainPermissionIfNotGranted(
+                android.Manifest.permission.RECORD_AUDIO,
+                _stringResolver.getString(R.string.explanation_microphone));
+        obtainPermissionIfNotGranted(
+                android.Manifest.permission.WRITE_SETTINGS,
+                _stringResolver.getString(R.string.explanation_settings));
     }
 
-    private void obtainPermissionIfNotGranted(String permission) {
-        if(permissionGranted(permission) == false) {
-            _permissionService.obtainPermission(permission);
+    private void obtainPermissionIfNotGranted(String permission, String explanation) {
+        if(isPermissionGranted(permission) == false) {
+            _permissionService.obtainPermission(permission, explanation);
         }
     }
 
-    private boolean permissionGranted(String permission) {
+    private boolean isPermissionGranted(String permission) {
         return _permissionService.getPermissionStatus(permission) == IPermissionService.Status.Granted;
-    }
-
-    private void obtainPermission(String permission) {
-        if(_permissionService.getPermissionStatus(permission) != IPermissionService.Status.Granted) {
-            _permissionService.obtainPermission(permission);
-        }
     }
 
     public void fire(Trigger trigger) {
@@ -234,7 +233,7 @@ public class MainController implements IClapListener, IExposerListener {
     @Override
     public void onClap() {
         if(_stateMachine.getState() == State.Expose) {
-            _exposer.expose(_exposureTime, permissionGranted(android.Manifest.permission.WRITE_SETTINGS));
+            _exposer.expose(_exposureTime, isPermissionGranted(android.Manifest.permission.WRITE_SETTINGS));
         }
     }
 
