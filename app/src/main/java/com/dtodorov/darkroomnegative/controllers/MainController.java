@@ -10,6 +10,7 @@ import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
 import com.dtodorov.darkroomnegative.services.IBitmapLoader;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.IClapListener;
+import com.dtodorov.darkroomnegative.services.IDialogPresenter;
 import com.dtodorov.darkroomnegative.services.IExposer;
 import com.dtodorov.darkroomnegative.services.IExposerListener;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
@@ -48,6 +49,7 @@ public class MainController implements IClapListener, IExposerListener {
     private IAsyncFilterTask _negativeFilterTask;
     private IEventDispatcher _eventDispatcher;
     private IClapDetector _clapDetector;
+    private IDialogPresenter _dialogPresenter;
 
     private Bitmap _positiveBitmap;
     private Bitmap _negativeBitmap;
@@ -63,7 +65,8 @@ public class MainController implements IClapListener, IExposerListener {
             IBitmapLoader bitmapLoader,
             IAsyncFilterTask greyscaleFilterTask,
             IAsyncFilterTask negativeFilterTask,
-            IClapDetector clapDetector
+            IClapDetector clapDetector,
+            IDialogPresenter dialogPresenter
     )
     {
         _eventDispatcher = eventDispatcher;
@@ -74,6 +77,7 @@ public class MainController implements IClapListener, IExposerListener {
         _greyscaleFilterTask = greyscaleFilterTask;
         _negativeFilterTask = negativeFilterTask;
         _clapDetector = clapDetector;
+        _dialogPresenter = dialogPresenter;
 
         _clapDetector.setListener(this);
         _exposer.setListener(this);

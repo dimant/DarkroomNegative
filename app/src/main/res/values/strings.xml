@@ -10,4 +10,8 @@
     <string name="about_title">About</string>
     <string name="title_activity_about">About</string>
     <string name="copyright_notice">© 2016 Diman Todorov all rights reserved</string>
+    <string name="button_ok">Ok</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="explanation_microphone">Microphone permission is needed to listen for claps.</string>
+    <string name="explanation_settings">Settings write permission is needed to restore backlight level after exposure.</string>
 </resources>

@@ -32,6 +32,7 @@ import com.dtodorov.darkroomnegative.helpers.IEventListener;
 import com.dtodorov.darkroomnegative.helpers.UnitDisplayConverter;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
 import com.dtodorov.darkroomnegative.services.ClapDetector;
+import com.dtodorov.darkroomnegative.services.DialogPresenter;
 import com.dtodorov.darkroomnegative.services.Exposer;
 import com.dtodorov.darkroomnegative.services.FullScreen;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
@@ -151,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
                                 Arrays.asList(
                                         new Invert(renderScriptContextFactory),
                                         new Rotate(180.0f)))),
-                new ClapDetector()
+                new ClapDetector(),
+                new DialogPresenter(getFragmentManager())
         );
 
 
