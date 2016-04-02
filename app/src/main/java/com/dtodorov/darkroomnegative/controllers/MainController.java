@@ -15,13 +15,13 @@ import com.dtodorov.darkroomnegative.services.IExposer;
 import com.dtodorov.darkroomnegative.services.IExposerListener;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
 import com.dtodorov.darkroomnegative.services.IFullScreenListener;
+import com.dtodorov.darkroomnegative.services.IPermissionService;
 import com.dtodorov.darkroomnegative.services.IToaster;
 import com.github.oxo42.stateless4j.StateMachine;
 import com.github.oxo42.stateless4j.delegates.Action;
 
 import java.io.FileNotFoundException;
-
-import root.gast.audio.interp.ILoudNoiseListener;
+import java.util.jar.Manifest;
 
 /**
  * Created by ditodoro on 3/25/2016.
@@ -30,7 +30,7 @@ public class MainController implements IClapListener, IExposerListener {
     private enum State {
         HomeScreen,
         ExposureSetup,
-        FullScreen
+        Expose
     };
 
     public enum Trigger {
@@ -50,12 +50,12 @@ public class MainController implements IClapListener, IExposerListener {
     private IEventDispatcher _eventDispatcher;
     private IClapDetector _clapDetector;
     private IDialogPresenter _dialogPresenter;
+    private IPermissionService _permissionService;
 
     private Bitmap _positiveBitmap;
     private Bitmap _negativeBitmap;
 
     private int _exposureTime;
-    private State _state;
 
     public MainController(
             IEventDispatcher eventDispatcher,
@@ -66,7 +66,8 @@ public class MainController implements IClapListener, IExposerListener {
             IAsyncFilterTask greyscaleFilterTask,
             IAsyncFilterTask negativeFilterTask,
             IClapDetector clapDetector,
-            IDialogPresenter dialogPresenter
+            IDialogPresenter dialogPresenter,
+            IPermissionService permissionService
     )
     {
         _eventDispatcher = eventDispatcher;
@@ -78,6 +79,7 @@ public class MainController implements IClapListener, IExposerListener {
         _negativeFilterTask = negativeFilterTask;
         _clapDetector = clapDetector;
         _dialogPresenter = dialogPresenter;
+        _permissionService = permissionService;
 
         _clapDetector.setListener(this);
         _exposer.setListener(this);
@@ -86,7 +88,7 @@ public class MainController implements IClapListener, IExposerListener {
 
         _stateMachine.configure(State.HomeScreen)
                 .permit(Trigger.SetupExposure, State.ExposureSetup)
-                .permit(Trigger.Expose, State.FullScreen);
+                .permit(Trigger.Expose, State.Expose);
 
         _stateMachine.configure(State.ExposureSetup)
                 .onEntry(new Action() {
@@ -103,10 +105,10 @@ public class MainController implements IClapListener, IExposerListener {
                         _eventDispatcher.emit("hideView", R.id.exposureTimeDisplay);
                     }
                 })
-                .permit(Trigger.Expose, State.FullScreen)
+                .permit(Trigger.Expose, State.Expose)
                 .permit(Trigger.SetupExposure, State.HomeScreen);
 
-        _stateMachine.configure(State.FullScreen)
+        _stateMachine.configure(State.Expose)
                 .onEntry(new Action() {
                     @Override
                     public void doIt() {
@@ -114,7 +116,12 @@ public class MainController implements IClapListener, IExposerListener {
                         _eventDispatcher.emit("hideView", R.id.imageView);
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
                         _fullScreen.enterFullScreen();
-                        _clapDetector.start();
+
+                        if (permissionGranted(android.Manifest.permission.RECORD_AUDIO)) {
+                            _clapDetector.start();
+                        } else {
+                            _exposer.expose(_exposureTime, permissionGranted(android.Manifest.permission.WRITE_SETTINGS));
+                        }
                     }
                 })
                 .onExit(new Action() {
@@ -157,6 +164,25 @@ public class MainController implements IClapListener, IExposerListener {
                 _eventDispatcher.emit("showView", R.id.controlPanel);
             }
         });
+
+        obtainPermissionIfNotGranted(android.Manifest.permission.RECORD_AUDIO);
+        obtainPermissionIfNotGranted(android.Manifest.permission.WRITE_SETTINGS);
+    }
+
+    private void obtainPermissionIfNotGranted(String permission) {
+        if(permissionGranted(permission) == false) {
+            _permissionService.obtainPermission(permission);
+        }
+    }
+
+    private boolean permissionGranted(String permission) {
+        return _permissionService.getPermissionStatus(permission) == IPermissionService.Status.Granted;
+    }
+
+    private void obtainPermission(String permission) {
+        if(_permissionService.getPermissionStatus(permission) != IPermissionService.Status.Granted) {
+            _permissionService.obtainPermission(permission);
+        }
     }
 
     public void fire(Trigger trigger) {
@@ -207,14 +233,14 @@ public class MainController implements IClapListener, IExposerListener {
 
     @Override
     public void onClap() {
-        if(_stateMachine.getState() == State.FullScreen) {
-            _exposer.expose(_exposureTime);
+        if(_stateMachine.getState() == State.Expose) {
+            _exposer.expose(_exposureTime, permissionGranted(android.Manifest.permission.WRITE_SETTINGS));
         }
     }
 
     @Override
     public void onExposeFinished() {
-        if(_stateMachine.getState() == State.FullScreen) {
+        if(_stateMachine.getState() == State.Expose) {
             _clapDetector.start();
         }
     }

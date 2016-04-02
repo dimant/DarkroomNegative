@@ -6,5 +6,5 @@ package com.dtodorov.darkroomnegative.services;
 public interface IPermissionListener {
     void onGranted(String permission);
     void onDenied(String permission);
-    void onCancelled();
+    void onCancelled(String permission);
 }

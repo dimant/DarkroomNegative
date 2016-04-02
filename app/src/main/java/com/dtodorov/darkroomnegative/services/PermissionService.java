@@ -1,84 +1,52 @@
 package com.dtodorov.darkroomnegative.services;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by ditodoro on 4/1/2016.
  */
-public class PermissionService {
-    private Map<String, Integer> _permissionCodes;
-    private Map<String, Boolean> _permissionStatus;
-    private int _lastCode;
+public class PermissionService implements IPermissionListener, IPermissionService {
 
-    private Activity _context;
-    private IPermissionListener _listener;
+    private Map<String, Integer> _permissions;
+    private IPermissionRequester _requester;
 
-    public PermissionService(Activity context) {
-        Init(context, null);
+    public PermissionService(IPermissionRequester requester) {
+        _requester = requester;
+        _requester.setListener(this);
     }
 
-    public PermissionService(Activity context, IPermissionListener listener) {
-        Init(context, listener);
-    }
-
-    private void Init(Activity context, IPermissionListener listener) {
-        _context = context;
-        _permissionCodes = new HashMap<String, Integer>();
-        _listener = listener;
-    }
-
-    private int getCode(String permission) {
-        if(_permissionCodes.containsKey(permission)) {
-            return _permissionCodes.get(permission);
-        } else {
-            Integer code = _lastCode;
-            _permissionCodes.put(permission, code);
-            _lastCode += 1;
-            return code;
-        }
-    }
-
-    private String getPermission(Integer code) {
-        for(String permission : _permissionCodes.keySet()) {
-            if(_permissionCodes.get(permission).equals(code))
-                return permission;
-        }
-
-        return "";
-    }
-
+    @Override
     public void obtainPermission(String permission) {
-        if(_permissionStatus.containsKey(permission) == false
-                && ContextCompat.checkSelfPermission(_context, permission) != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(_context, permission)) {
+        _requester.obtainPermission(permission);
+    }
 
+    @Override
+    public Status getPermissionStatus(String permission) {
+        if(_permissions.containsKey(permission)) {
+            if(_permissions.get(permission) == PackageManager.PERMISSION_GRANTED) {
+                return Status.Granted;
             } else {
-                ActivityCompat.requestPermissions(_context, new String[] { permission }, getCode(permission));
+                return Status.Denied;
             }
+        } else {
+            return  Status.Unknown;
         }
     }
 
-    public void onRequestPermissionResult(int code, String received[], int[] results) {
-        if(_listener == null)
-            return;
+    @Override
+    public void onGranted(String permission) {
+        _permissions.put(permission, PackageManager.PERMISSION_GRANTED);
+    }
 
-        String requested = getPermission(code);
-        if(requested != "") {
-            if(received.length == 0) {
-                _listener.onCancelled();
-            } else if( received[0].equals(requested)
-                    && results[0] == PackageManager.PERMISSION_GRANTED) {
-                _listener.onGranted(requested);
-            } else {
-                _listener.onDenied(requested);
-            }
-        }
+    @Override
+    public void onDenied(String permission) {
+        _permissions.put(permission, PackageManager.PERMISSION_DENIED);
+    }
+
+    @Override
+    public void onCancelled(String permission) {
+        _permissions.put(permission, PackageManager.PERMISSION_DENIED);
     }
 }

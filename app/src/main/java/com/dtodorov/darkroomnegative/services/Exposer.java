@@ -67,14 +67,16 @@ public class Exposer implements IExposer {
     }
 
     @Override
-    public void expose(int seconds) {
+    public void expose(int seconds, final boolean changeBrightness) {
         _handler.post(new Runnable() {
             @Override
             public void run() {
                 _currentBrightnessMode = getBrightnessMode();
                 _currentBrightness = getBrightness();
-                setBrightnessMode(Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-                setBrightness(255);
+                if (changeBrightness) {
+                    setBrightnessMode(Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+                    setBrightness(255);
+                }
                 _view.setVisibility(View.VISIBLE);
             }
         });
@@ -82,8 +84,10 @@ public class Exposer implements IExposer {
         _handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setBrightness(_currentBrightness);
-                setBrightnessMode(_currentBrightnessMode);
+                if(changeBrightness) {
+                    setBrightness(_currentBrightness);
+                    setBrightnessMode(_currentBrightnessMode);
+                }
                 _view.setVisibility(View.INVISIBLE);
                 _listener.onExposeFinished();
             }
