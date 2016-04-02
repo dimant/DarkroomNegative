@@ -3,7 +3,6 @@ package root.gast.audio.record;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 
