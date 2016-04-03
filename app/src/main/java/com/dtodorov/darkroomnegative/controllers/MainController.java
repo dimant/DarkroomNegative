@@ -7,10 +7,10 @@ import com.dtodorov.darkroomnegative.ImageProcessing.IAsyncFilterTask;
 import com.dtodorov.darkroomnegative.ImageProcessing.IFilterCompletion;
 import com.dtodorov.darkroomnegative.R;
 import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
+import com.dtodorov.darkroomnegative.services.IBrightness;
 import com.dtodorov.darkroomnegative.services.IBitmapLoader;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
 import com.dtodorov.darkroomnegative.services.IClapListener;
-import com.dtodorov.darkroomnegative.services.IDialogPresenter;
 import com.dtodorov.darkroomnegative.services.IExposer;
 import com.dtodorov.darkroomnegative.services.IExposerListener;
 import com.dtodorov.darkroomnegative.services.IFullScreen;
@@ -22,7 +22,6 @@ import com.github.oxo42.stateless4j.StateMachine;
 import com.github.oxo42.stateless4j.delegates.Action;
 
 import java.io.FileNotFoundException;
-import java.util.jar.Manifest;
 
 /**
  * Created by ditodoro on 3/25/2016.
@@ -58,6 +57,10 @@ public class MainController implements IClapListener, IExposerListener {
 
     private int _exposureTime;
 
+    private IBrightness _brightness;
+    private int _currentBrightnessMode;
+    private int _currentBrightness;
+
     public MainController(
             IEventDispatcher eventDispatcher,
             IToaster toaster,
@@ -68,7 +71,8 @@ public class MainController implements IClapListener, IExposerListener {
             IAsyncFilterTask negativeFilterTask,
             IClapDetector clapDetector,
             IPermissionService permissionService,
-            IStringResolver stringResolver
+            IStringResolver stringResolver,
+            IBrightness backlight
     )
     {
         _eventDispatcher = eventDispatcher;
@@ -81,6 +85,7 @@ public class MainController implements IClapListener, IExposerListener {
         _clapDetector = clapDetector;
         _permissionService = permissionService;
         _stringResolver = stringResolver;
+        _brightness = backlight;
 
         _clapDetector.setListener(this);
         _exposer.setListener(this);
@@ -116,21 +121,31 @@ public class MainController implements IClapListener, IExposerListener {
                         _eventDispatcher.emit("imageSet", _negativeBitmap);
                         _eventDispatcher.emit("hideView", R.id.imageView);
                         _eventDispatcher.emit("hideView", R.id.controlPanel);
+
                         _fullScreen.enterFullScreen();
+
+                        _currentBrightnessMode = _brightness.getBrightnessMode();
+                        _currentBrightness = _brightness.getBrightness();
+                        _brightness.setBrightness(0);
 
                         if (isPermissionGranted(android.Manifest.permission.RECORD_AUDIO)) {
                             _clapDetector.start();
                         } else {
-                            _exposer.expose(_exposureTime, isPermissionGranted(android.Manifest.permission.WRITE_SETTINGS));
+                            _exposer.expose(_exposureTime);
                         }
                     }
                 })
                 .onExit(new Action() {
                     @Override
                     public void doIt() {
+                        _brightness.setBrightnessMode(_currentBrightnessMode);
+                        _brightness.setBrightness(_currentBrightness);
+
                         _clapDetector.stop();
                         _exposer.cancel();
+
                         _eventDispatcher.emit("imageSet", _positiveBitmap);
+
                         _fullScreen.exitFullScreen();
                     }
                 })
@@ -233,7 +248,7 @@ public class MainController implements IClapListener, IExposerListener {
     @Override
     public void onClap() {
         if(_stateMachine.getState() == State.Expose) {
-            _exposer.expose(_exposureTime, isPermissionGranted(android.Manifest.permission.WRITE_SETTINGS));
+            _exposer.expose(_exposureTime);
         }
     }
 

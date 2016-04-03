@@ -31,11 +31,14 @@ import com.dtodorov.darkroomnegative.helpers.IEventDispatcher;
 import com.dtodorov.darkroomnegative.helpers.IEventListener;
 import com.dtodorov.darkroomnegative.helpers.UnitDisplayConverter;
 import com.dtodorov.darkroomnegative.services.BitmapLoader;
+import com.dtodorov.darkroomnegative.services.Brightness;
 import com.dtodorov.darkroomnegative.services.ClapDetector;
 import com.dtodorov.darkroomnegative.services.DialogPresenter;
 import com.dtodorov.darkroomnegative.services.Exposer;
 import com.dtodorov.darkroomnegative.services.FullScreen;
+import com.dtodorov.darkroomnegative.services.IBrightness;
 import com.dtodorov.darkroomnegative.services.IClapDetector;
+import com.dtodorov.darkroomnegative.services.IPermissionService;
 import com.dtodorov.darkroomnegative.services.IStringResolver;
 import com.dtodorov.darkroomnegative.services.PermissionRequester;
 import com.dtodorov.darkroomnegative.services.PermissionService;
@@ -144,11 +147,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
         IStringResolver stringResolver = new StringResolver(getResources());
+        IPermissionService permissionService = new PermissionService(
+                new PermissionRequester(this),
+                new DialogPresenter(getFragmentManager()));
+        IBrightness brightness = new Brightness(getContentResolver(), permissionService);
+
         _mainController = new MainController(
                 _eventDispatcher,
                 new Toaster(context, stringResolver),
                 new FullScreen(this, contentControl),
-                new Exposer(imageView, getContentResolver()),
+                new Exposer(imageView, brightness),
                 new BitmapLoader(context),
                 new AsyncFilterTask(new Grayscale(renderScriptContextFactory)),
                 new AsyncFilterTask(
@@ -157,10 +165,9 @@ public class MainActivity extends AppCompatActivity {
                                         new Invert(renderScriptContextFactory),
                                         new Rotate(180.0f)))),
                 new ClapDetector(),
-                new PermissionService(
-                        new PermissionRequester(this),
-                        new DialogPresenter(getFragmentManager())),
-                stringResolver
+                permissionService,
+                stringResolver,
+                brightness
         );
 
 

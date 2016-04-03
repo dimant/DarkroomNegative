@@ -6,7 +6,7 @@ package com.dtodorov.darkroomnegative.services;
 public interface IExposer {
     void setListener(IExposerListener listener);
 
-    void expose(int seconds, boolean changeBrightness);
+    void expose(int seconds);
 
     void cancel();
 }
