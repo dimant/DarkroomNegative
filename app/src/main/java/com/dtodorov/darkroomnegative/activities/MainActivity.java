@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity {
                 brightness
         );
 
-
         FragmentManager fm = getFragmentManager();
         _mainFragment = (MainFragment) fm.findFragmentByTag("mainFragment");
 
